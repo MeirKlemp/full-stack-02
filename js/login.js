@@ -30,8 +30,10 @@ function autoLogin() {
     return false;
 }
 
-/* Validates the login form's credentials. If it is valid, logins. Otherwise, it
- * shows a message to the user. */
+/*
+ * Validates the login form's credentials. If it is valid, logins. Otherwise, it
+ * shows a message to the user.
+ */
 function login() {
     const username = document.forms.frmLogin.username.value;
     const password = document.forms.frmLogin.password.value;
@@ -51,8 +53,10 @@ function login() {
     location.href = "./html/home.html";
 }
 
-/* Validates the register form's credentials. If it is valid, registers the new
- * user. Otherwise, it shows a message to the user. */
+/*
+ * Validates the register form's credentials. If it is valid, registers the new
+ * user. Otherwise, it shows a message to the user.
+ */
 function register() {
     const username = document.forms.frmRegister.username.value;
     const password = document.forms.frmRegister.password.value;
@@ -87,8 +91,8 @@ function register() {
 
 /*
  * Returns `true` if the given password is valid. Otherwise, returns `false`.
- * Valid password is a password with at least 1 upper case letter,  1 lower
- * case letter, 1 digit, and with length of 8 characters.
+ * Valid password is a password with at least 1 upper case letter, 1 lower case
+ * letter, 1 digit, and with length of 8 characters.
  */
 function isValidPassword(password) {
     if (password.length < 8) {
