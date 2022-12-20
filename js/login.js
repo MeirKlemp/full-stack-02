@@ -1,12 +1,18 @@
 /* File: login.js
- * This file handles the functionality of logging in and registering a new user.
+ * This file handles the functionality of logging in and registering a new
+ * user.
  */
 
 "use strict";
 
+/* Name of the auto login cookie. */
+const LOGIN_COOKIE_NAME = "username";
+/* Number of days until expiration of the auto login cookie. */
+const LOGIN_COOKIE_DAYS = 20;
+
 /*
- * Initializes the login and register page and auto logins if the user requested
- * it. This function must run before any other function in this file.
+ * Initializes the login and register page and auto logins if the user
+ * requested it. This function must run before any other function in this file.
  */
 function initializeLogin() {
     autoLogin();
@@ -27,12 +33,31 @@ function initializeLogin() {
  * logins.
  */
 function autoLogin() {
-    return false;
+    if (!document.cookie || !document.cookie.includes("username=")) {
+        return;
+    }
+
+    const autoLoginIndex = document.cookie.search(LOGIN_COOKIE_NAME + '=');
+    if (autoLoginIndex === -1) {
+        return;
+    }
+
+    let username = document.cookie.substring(autoLoginIndex
+        + LOGIN_COOKIE_NAME.length + 1);
+
+    // Removes cookies found after username's cookie.
+    const cookieSeparator = username.search(';');
+    if (cookieSeparator !== -1) {
+        username = username.substring(0, cookieSeparator);
+    }
+
+    sessionStorage.currentUsername = username;
+    location.href = "./html/home.html";
 }
 
 /*
- * Validates the login form's credentials. If it is valid, logins. Otherwise, it
- * shows a message to the user.
+ * Validates the login form's credentials. If it is valid, logins. Otherwise,
+ * it shows a message to the user.
  */
 function login() {
     const username = document.forms.frmLogin.username.value;
@@ -48,6 +73,8 @@ function login() {
         alert("Invalid username or password");
         return;
     }
+
+    setAutoLogin(username);
 
     sessionStorage.currentUsername = username;
     location.href = "./html/home.html";
@@ -68,9 +95,9 @@ function register() {
     }
 
     if (!isValidPassword(password)) {
-        alert("Invalid password. Password must contain at least 1 upper case " +
-            "letter, at least 1 lower case letter, at least 1 digit and at " +
-            "least 8 characters.");
+        alert("Invalid password. Password must contain at least 1 upper case "
+            + "letter, at least 1 lower case letter, at least 1 digit and at "
+            + "least 8 characters.");
         return;
     }
 
@@ -84,6 +111,8 @@ function register() {
         password: password,
     };
     localStorage[username] = JSON.stringify(user);
+
+    setAutoLogin(username);
 
     sessionStorage.currentUsername = username;
     location.href = "./html/home.html";
@@ -107,4 +136,18 @@ function isValidPassword(password) {
         return false;
     }
     return true;
+}
+
+/*
+ * If the checkbox to keep logged in is checked, the function saves the
+ * username in cookies, so next time the website will auto login.
+ */
+function setAutoLogin(username) {
+    const keepLoggedIn = document.getElementById("chkAutoLogin").value;
+    if (keepLoggedIn) {
+        const expires = new Date();
+        expires.setDate(expires.getDate() + LOGIN_COOKIE_DAYS);
+        document.cookie = `${LOGIN_COOKIE_NAME}=${username};` +
+            `expires=${expires.toUTCString()}`;
+    }
 }
