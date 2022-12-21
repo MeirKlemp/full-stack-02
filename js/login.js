@@ -131,11 +131,8 @@ function isValidPassword(password) {
     const digitPattern = /[0-9]/;
     const lowerPattern = /[a-z]/;
     const upperPattern = /[A-Z]/;
-    if (!digitPattern.test(password) || !lowerPattern.test(password) ||
-        !upperPattern.test(password)) {
-        return false;
-    }
-    return true;
+    return digitPattern.test(password) && lowerPattern.test(password) &&
+        upperPattern.test(password);
 }
 
 /*
