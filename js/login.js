@@ -11,11 +11,9 @@ const LOGIN_COOKIE_NAME = "username";
 const LOGIN_COOKIE_DAYS = 20;
 
 /*
- * Initializes the login and register page and auto logins or logouts if the
- * user requested it. This function must run before any other function in this
- * file.
+ * Logs out or auto logs in, then initializes the login and register forms.
  */
-function initializeLogin() {
+window.onload = function() {
     if (!logout()) {
         autoLogin();
     }
