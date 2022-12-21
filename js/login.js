@@ -140,7 +140,7 @@ function isValidPassword(password) {
  * username in cookies, so next time the website will auto login.
  */
 function setAutoLogin(username) {
-    const keepLoggedIn = document.getElementById("chkAutoLogin").value;
+    const keepLoggedIn = document.getElementById("chkAutoLogin").checked;
     if (keepLoggedIn) {
         const expires = new Date();
         expires.setDate(expires.getDate() + LOGIN_COOKIE_DAYS);
