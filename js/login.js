@@ -1,6 +1,6 @@
 /* File: login.js
- * This file handles the functionality of logging in and registering a new
- * user.
+ * This file handles the functionality of logging in, logging out, and
+ * registering a new user.
  */
 
 "use strict";
@@ -11,11 +11,14 @@ const LOGIN_COOKIE_NAME = "username";
 const LOGIN_COOKIE_DAYS = 20;
 
 /*
- * Initializes the login and register page and auto logins if the user
- * requested it. This function must run before any other function in this file.
+ * Initializes the login and register page and auto logins or logouts if the
+ * user requested it. This function must run before any other function in this
+ * file.
  */
 function initializeLogin() {
-    autoLogin();
+    if (!logout()) {
+        autoLogin();
+    }
 
     document.forms.frmLogin.addEventListener("submit", (ev) => {
         ev.preventDefault();
@@ -175,4 +178,26 @@ function setAutoLogin(username) {
 function getin(username) {
     sessionStorage.currentUsername = username;
     location.href = "./html/home.html";
+}
+
+/*
+ * Checks if the url has a parameter to logout. If it does, the function
+ * logouts and removes the auto login cookie.
+ * Returns `true` if logged out. Otherwise, returns `false`.
+ */
+function logout() {
+    const paramsString = document.location.href.split('?')[1];
+    if (!paramsString) {
+        return false;
+    }
+
+    const params = new URLSearchParams(paramsString);
+    if (params.get("logout")?.toLowerCase() !== "true") {
+        return false;
+    }
+
+    sessionStorage.removeItem("currentUsername");
+    document.cookie = `${LOGIN_COOKIE_NAME}=; ` +
+        `expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    return true;
 }
