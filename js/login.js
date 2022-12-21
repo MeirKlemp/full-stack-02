@@ -12,6 +12,13 @@ const LOGIN_COOKIE_NAME = "username";
 /* Number of days until expiration of the auto login cookie. */
 const LOGIN_COOKIE_DAYS = 20;
 
+/* Postfix of cookies that track the number of attempted logins. */
+const ATTEMPTS_COOKIE_POSTFIX = "_attempts";
+/* Number of attempts to login allowed before getting blocked. */
+const ATTEMPTS_MAX = 5;
+/* Number of minutes the attempts cookie stays alive. */
+const ATTEMPTS_MINUTES = 10;
+
 /*
  * Logs out or auto logs in, then initializes the login and register forms.
  */
@@ -54,8 +61,17 @@ function login() {
         return;
     }
 
+    // Checks the password, and blocks the user if attempted to login to many
+    // times.
+    const attemptsCookie = username + ATTEMPTS_COOKIE_POSTFIX;
+    const attempts = parseInt(getCookie(attemptsCookie));
     const user = JSON.parse(localStorage[username]);
-    if (user.password !== password) {
+    if (attempts >= ATTEMPTS_MAX || user.password !== password) {
+        // Updates the the number of attempts in the attempts cookie.
+        const expires = new Date();
+        expires.setMinutes(expires.getMinutes() + ATTEMPTS_MINUTES);
+        setCookie(attemptsCookie, isNaN(attempts) ? 1: attempts + 1, expires);
+
         alert("Invalid username or password");
         return;
     }
