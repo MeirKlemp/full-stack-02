@@ -51,8 +51,7 @@ function autoLogin() {
         username = username.substring(0, cookieSeparator);
     }
 
-    sessionStorage.currentUsername = username;
-    location.href = "./html/home.html";
+    getin(username);
 }
 
 /*
@@ -76,8 +75,7 @@ function login() {
 
     setAutoLogin(username);
 
-    sessionStorage.currentUsername = username;
-    location.href = "./html/home.html";
+    getin(username);
 }
 
 /*
@@ -120,8 +118,7 @@ function register() {
 
     setAutoLogin(username);
 
-    sessionStorage.currentUsername = username;
-    location.href = "./html/home.html";
+    getin(username);
 }
 
 /*
@@ -170,4 +167,12 @@ function setAutoLogin(username) {
         document.cookie = `${LOGIN_COOKIE_NAME}=${username};` +
             `expires=${expires.toUTCString()}`;
     }
+}
+
+/*
+ * Moves to home page after successfuly logged in or registered.
+ */
+function getin(username) {
+    sessionStorage.currentUsername = username;
+    location.href = "./html/home.html";
 }
