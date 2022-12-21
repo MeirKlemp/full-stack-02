@@ -5,6 +5,8 @@
 
 "use strict";
 
+import {getParam, getCookie, setCookie, removeCookie} from './common.js';
+
 /* Name of the auto login cookie. */
 const LOGIN_COOKIE_NAME = "username";
 /* Number of days until expiration of the auto login cookie. */
@@ -34,23 +36,7 @@ window.onload = function() {
  * logins.
  */
 function autoLogin() {
-    if (!document.cookie || !document.cookie.includes("username=")) {
-        return;
-    }
-
-    const autoLoginIndex = document.cookie.search(LOGIN_COOKIE_NAME + '=');
-    if (autoLoginIndex === -1) {
-        return;
-    }
-
-    let username = document.cookie.substring(autoLoginIndex
-        + LOGIN_COOKIE_NAME.length + 1);
-
-    // Removes cookies found after username's cookie.
-    const cookieSeparator = username.search(';');
-    if (cookieSeparator !== -1) {
-        username = username.substring(0, cookieSeparator);
-    }
+    const username = getCookie(LOGIN_COOKIE_NAME);
 
     getin(username);
 }
@@ -165,8 +151,7 @@ function setAutoLogin(username) {
     if (keepLoggedIn) {
         const expires = new Date();
         expires.setDate(expires.getDate() + LOGIN_COOKIE_DAYS);
-        document.cookie = `${LOGIN_COOKIE_NAME}=${username};` +
-            `expires=${expires.toUTCString()}`;
+        setCookie(LOGIN_COOKIE_NAME, username, expires);
     }
 }
 
@@ -184,18 +169,11 @@ function getin(username) {
  * Returns `true` if logged out. Otherwise, returns `false`.
  */
 function logout() {
-    const paramsString = document.location.href.split('?')[1];
-    if (!paramsString) {
-        return false;
-    }
-
-    const params = new URLSearchParams(paramsString);
-    if (params.get("logout")?.toLowerCase() !== "true") {
+    if (getParam("logout")?.toLowerCase() !== "true") {
         return false;
     }
 
     sessionStorage.removeItem("currentUsername");
-    document.cookie = `${LOGIN_COOKIE_NAME}=; ` +
-        `expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    removeCookie(LOGIN_COOKIE_NAME);
     return true;
 }
