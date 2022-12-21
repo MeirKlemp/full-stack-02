@@ -88,7 +88,7 @@ function register() {
 
     if (!isValidUsername(username)) {
         alert("Invalid username. Username must contain at least 1 character," +
-            " and semicolons are forbidden");
+            " and special characters are forbidden.");
         return;
     }
 
@@ -110,16 +110,18 @@ function register() {
 
 /*
  * Returns `true` if the given username is valid. Otherwise, returns `false`.
- * Valid username is a username with at least 1 character and without
- * semicolons, because semicolons ruines the cookie.
+ * Valid username won't ruin the cookies.
  */
 function isValidUsername(username) {
     if (username.length == 0) {
         return false;
     }
 
-    if (username.includes(';')) {
-        return false;
+    const charPattern = /[a-zA-Z1-9!@#$%^&*._]/
+    for (const ch of username) {
+        if (!charPattern.test(ch)) {
+            return false;
+        }
     }
 
     return true;
