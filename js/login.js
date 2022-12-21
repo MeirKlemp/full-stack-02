@@ -45,7 +45,9 @@ window.onload = function() {
 function autoLogin() {
     const username = getCookie(LOGIN_COOKIE_NAME);
 
-    getin(username);
+    if (username) {
+        getin(username);
+    }
 }
 
 /*
