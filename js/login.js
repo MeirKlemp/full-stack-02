@@ -101,6 +101,12 @@ function register() {
         return;
     }
 
+    if (!isValidUsername(username)) {
+        alert("Invalid username. Username must contain at least 1 character," +
+            " and semicolons are forbidden");
+        return;
+    }
+
     if (localStorage[username]) {
         alert("Username already exists");
         return;
@@ -116,6 +122,23 @@ function register() {
 
     sessionStorage.currentUsername = username;
     location.href = "./html/home.html";
+}
+
+/*
+ * Returns `true` if the given username is valid. Otherwise, returns `false`.
+ * Valid username is a username with at least 1 character and without
+ * semicolons, because semicolons ruines the cookie.
+ */
+function isValidUsername(username) {
+    if (username.length == 0) {
+        return false;
+    }
+
+    if (username.includes(';')) {
+        return false;
+    }
+
+    return true;
 }
 
 /*
