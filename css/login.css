@@ -7,25 +7,39 @@ h1, h2 {
     text-align: center;
 }
 
-input {
-    padding: 3px;
-    margin: 5px;
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    margin: auto;
+    background-color: wheat;
 }
 
 #forms-container {
     display: flex;
     padding: 15px;
+    justify-content: center;
 }
 
-main {
-    /* specific for forms and keep logged in container */
+#forms-container > form {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    width: 250px;
+}
 
-    padding: 15px;
-    margin: auto;
-    background-color: wheat;
+input {
+    padding: 3px;
+    margin: 5px;
+}
+
+.error {
+    color: red;
+    overflow-wrap: break-word;
+}
+
+.hidden {
+    display: none;
 }
 
 .separator {

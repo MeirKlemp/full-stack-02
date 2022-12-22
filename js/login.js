@@ -59,7 +59,7 @@ function login() {
     const password = document.forms.frmLogin.password.value;
 
     if (!localStorage[username]) {
-        alert("Invalid username or password");
+        loginError("Invalid username or password");
         return;
     }
 
@@ -74,7 +74,7 @@ function login() {
         expires.setMinutes(expires.getMinutes() + ATTEMPTS_MINUTES);
         setCookie(attemptsCookie, isNaN(attempts) ? 1: attempts + 1, expires);
 
-        alert("Invalid username or password");
+        loginError("Invalid username or password");
         return;
     }
 
@@ -92,26 +92,28 @@ function register() {
     const password = document.forms.frmRegister.password.value;
     const password2 = document.forms.frmRegister.password2.value;
 
-    if (password !== password2) {
-        alert("Passwords do not match");
-        return;
-    }
-
-    if (!isValidPassword(password)) {
-        alert("Invalid password. Password must contain at least 1 upper case "
-            + "letter, at least 1 lower case letter, at least 1 digit and at "
-            + "least 8 characters.");
-        return;
-    }
-
     if (!isValidUsername(username)) {
-        alert("Invalid username. Username must contain at least 1 character," +
-            " and special characters are forbidden.");
+        registerError("Invalid username. Username must contain at least 1" +
+            " character, and special characters are forbidden.");
         return;
     }
 
     if (localStorage[username]) {
-        alert("Username already exists");
+        registerError("Username already exists");
+        return;
+    }
+
+    if (password !== password2) {
+        registerError("Passwords do not match");
+        return;
+    }
+
+    if (!isValidPassword(password)) {
+        registerError("Invalid password. Password must contain:<br>" +
+            "* at least 1 upper case letter<br>" +
+            "* at least 1 lower case letter<br>" +
+            "* at least 1 digit<br>" +
+            "* at least 8 characters");
         return;
     }
 
@@ -196,4 +198,22 @@ function logout() {
     sessionStorage.removeItem("currentUsername");
     removeCookie(LOGIN_COOKIE_NAME);
     return true;
+}
+
+/*
+ * Displays a login error message using the login error label.
+ */
+function loginError(errorMessage) {
+    const label = document.getElementById("loginError");
+    label.classList.remove("hidden");
+    label.innerHTML = errorMessage;
+}
+
+/*
+ * Displays a register error message using the register error label.
+ */
+function registerError(errorMessage) {
+    const label = document.getElementById("registerError");
+    label.classList.remove("hidden");
+    label.innerHTML = errorMessage;
 }
