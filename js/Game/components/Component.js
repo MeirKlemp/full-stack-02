@@ -10,7 +10,10 @@ export default class Component {
     register(gameObject) {
         this._gameObject = gameObject;
     }
-    invoke() {
+    destroy() {
+    }
+    selfDestroy() {
+        var _a;
+        (_a = this._gameObject) === null || _a === void 0 ? void 0 : _a.removeComponent(this._id);
     }
 }
-Component.lastId = 0;

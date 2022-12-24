@@ -1,6 +1,6 @@
 export default class Vector {
-  public _x: number = 0;
-  public _y: number = 0;
+  private _x: number = 0;
+  private _y: number = 0;
 
   public static zero = new Vector(0, 0);
   public static up = new Vector(0, 1);

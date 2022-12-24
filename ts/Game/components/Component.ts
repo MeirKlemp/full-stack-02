@@ -2,7 +2,6 @@ import uuid from "../../tools/uuid";
 import GameObject from "./GameObject";
 
 export default class Component{
-    static lastId = 0
     protected _id:string
     protected _gameObject:GameObject|null
 
@@ -19,8 +18,11 @@ export default class Component{
         this._gameObject = gameObject
     }
 
-    public invoke(){
-        
+    public destroy(){
+
+    }
+    public selfDestroy():void{
+        this._gameObject?.removeComponent(this._id);
     }
 }
 

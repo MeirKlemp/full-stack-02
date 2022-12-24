@@ -9,9 +9,9 @@ export default class Game{
     private static readonly fps = 60;
      
 
-    constructor(){
+    constructor(drawer:Drawer){
         this._gameObjects = []
-        this._drawer = new Drawer()//TODO :: get the drawer canvas
+        this._drawer = drawer
     }
 
     addGameObject(gameObject:GameObject){
@@ -22,15 +22,26 @@ export default class Game{
     public start():void{
         this._gameObjects.forEach(go=>{
             go.start()
-        })
+        });
     }
+
+    
 
     public update():void{
         this._gameObjects.forEach(go=>go.update())
     }
 
-    public destroy(gameObject:GameObject){
-        this._gameObjects = this._gameObjects.filter(go=>go.id)
+    public destroy(id:string){
+        this._gameObjects.find(go=>go.id==id)?.destroy()
+        this._gameObjects = this._gameObjects.filter(go=>go.id == id)
+    }
+
+    public findGameObjectById(id:string):GameObject|undefined{
+        return this._gameObjects.find(go=>go.id==id)
+    }
+
+    public findGameObject(predicate:{(component:GameObject):void}):GameObject|undefined{
+        return this._gameObjects.find(predicate)
     }
 
     
