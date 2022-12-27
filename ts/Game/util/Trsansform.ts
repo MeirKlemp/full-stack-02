@@ -1,5 +1,6 @@
-import Component from "../components/Component";
-import Vector from "./Vector";
+import Component from "../components/Component.js";
+import Vector from "./Vector.js";
+import Resizable from "../components/visual/Resizeble.js";
 
 export default class Transform extends Component{
     private _scale:Vector
@@ -24,10 +25,17 @@ export default class Transform extends Component{
 
     public resize(newSize:Vector):void{
         this._scale = newSize
+        if(this._gameObject!=null){
+            this._gameObject.getComponents(Resizable).forEach(r=>r.resize(this.scale))
+        }
     }
 
     public rotate(angle:Vector):void{
         this._rotation = this._rotation.add(angle)
+    }
+
+    public set position(newPosition:Vector){
+        this.position = newPosition;
     }
 
     constructor(scale:Vector = new Vector(1,1),position:Vector = Vector.zero,rotation:Vector = Vector.zero){

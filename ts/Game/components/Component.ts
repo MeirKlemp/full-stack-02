@@ -1,5 +1,5 @@
-import uuid from "../../tools/uuid";
-import GameObject from "./GameObject";
+import uuid from "../../tools/uuid.js";
+import GameObject from "./GameObject.js";
 
 export default class Component{
     protected _id:string

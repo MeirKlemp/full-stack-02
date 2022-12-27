@@ -1,9 +1,9 @@
-import Drawer from "./Drawer";
+import Renderer from "../components/visual/renderers/Renderer.js";
 export default class Game {
-    constructor() {
+    constructor(drawer, initFunction) {
         this._gameObjects = [];
-        this._drawer = new Drawer();
-        //TODO :: get the drawer canvas
+        this._drawer = drawer;
+        this.init(initFunction);
     }
     addGameObject(gameObject) {
         this._gameObjects.push(gameObject);
@@ -13,8 +13,18 @@ export default class Game {
             go.start();
         });
     }
+    get drawer() {
+        return this._drawer;
+    }
     update() {
         this._gameObjects.forEach(go => go.update());
+    }
+    drawScreen() {
+        const renderers = this._gameObjects.reduce((prev, go) => [...prev, ...go.getComponents(Renderer)], []);
+        this.drawer.drawScreen(renderers);
+    }
+    lateUpdate() {
+        this._gameObjects.forEach(go => go.lateUpdate());
     }
     destroy(id) {
         var _a;
@@ -27,5 +37,9 @@ export default class Game {
     findGameObject(predicate) {
         return this._gameObjects.find(predicate);
     }
+    init(initFunction) {
+        initFunction(this);
+    }
 }
 Game.fps = 60;
+Game.deltaTime = 1000 / Game.fps;

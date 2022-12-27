@@ -36,5 +36,8 @@ export default class Vector {
   public get norm(): Vector {
     return this.mult(this.magnitude);
   }
+  public get arr():number[]{
+    return [this.x,this.y]
+  }
 }
 

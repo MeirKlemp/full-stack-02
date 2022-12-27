@@ -26,6 +26,9 @@ export default class Vector {
     get norm() {
         return this.mult(this.magnitude);
     }
+    get arr() {
+        return [this.x, this.y];
+    }
 }
 Vector.zero = new Vector(0, 0);
 Vector.up = new Vector(0, 1);

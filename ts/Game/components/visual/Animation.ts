@@ -1,19 +1,15 @@
-import Component from "../Component";
-import Vector from "../../util/Vector";
-import Displayable from "./Displayable";
-import Sprite from "./Sprite";
-import { GAME_OBJECT_ERROR } from "../../../errors";
+import Component from "../Component.js";
+import Vector from "../../util/Vector.js";
+import Displayable from "./Displayable.js";
+import Sprite from "./Sprite.js";
+import { GAME_OBJECT_ERROR } from "../../../errors.js";
 
 
 
 /**
  * Presents animation for animating GameObjects
  */
-export default class Animation extends Component implements Displayable {
-  /**
-   * The sprites of the animations
-   */
-  private _sprites: Sprite[];
+export default class Animation extends Displayable {
   /**
    * The time between each sprite change
    */
@@ -23,20 +19,31 @@ export default class Animation extends Component implements Displayable {
    */
   private _startTime = new Date().getMilliseconds();
   /**
-   * is the anumation paused
+   * The paths of all the images
    */
-  private _isPaused: boolean = false;
+  private _imagesPaths:string[];
+  /**
+   * the name of the animation
+   */
+  private _name:string;
 
   /**
    * Create new anumation
    * @param sprites The sprites for the anumation
    * @param timeBetweenFrames The time between each sprite change in MS
    */
-  constructor(sprites: Sprite[], timeBetweenFrames: number = 1000) {
+  constructor( name:string = "untitled animation",timeBetweenFrames: number = 1000,...imagesPaths:string[]) {
     super();
-    this._sprites = sprites;
+    this._imagesPaths = imagesPaths
+    this._name = name
+    const sprites:Sprite[] = []
+    for(const path of imagesPaths){
+
+    }
     this._timeBetweenFrames = timeBetweenFrames;
   }
+
+
   public get position(): Vector {
     if(this._gameObject==null){
       throw new Error(GAME_OBJECT_ERROR);
@@ -56,21 +63,27 @@ export default class Animation extends Component implements Displayable {
    * @returns The sprite to display at the current time
    */
   private getCurrenSprite(): Sprite {
+    if(this._gameObject==null){
+      throw new Error(GAME_OBJECT_ERROR)
+    }
     const timeFromStart: number =
       new Date().getMilliseconds() - this._startTime;
-    return this._sprites[
-      (timeFromStart / this._timeBetweenFrames) % this._sprites.length
-    ];
+    const imageIndex:number = (timeFromStart / this._timeBetweenFrames) % this._imagesPaths.length
+    const path:string =  this._imagesPaths[imageIndex];
+    const currentSprite = new Sprite(this._name+imageIndex,path)
+    currentSprite.register(this._gameObject)
+    return currentSprite
+  }
+
+  public displayData(): string {
+    return this.getCurrenSprite().displayData();
   }
 
   /**
-   * Destroy the animation component
+   * Get the current sprite of the animation
+   * @returns The current sprite to render in the animation
    */
-  public destroy(): void {
-    this._sprites.forEach((s) => s.destroy());
-  }
-
-  public displayData(): HTMLImageElement {
-    return this.getCurrenSprite().image;
+  public get currentSprite():Sprite{
+    return this.getCurrenSprite()
   }
 }

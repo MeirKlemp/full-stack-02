@@ -1,4 +1,4 @@
-import uuid from "../../tools/uuid";
+import uuid from "../../tools/uuid.js";
 export default class Component {
     constructor() {
         this._id = uuid();

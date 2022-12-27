@@ -1,4 +1,4 @@
-import Component from "../components/Component";
+import Component from "../components/Component.js";
 export default class Renderer extends Component {
     constructor(displayItem) {
         super();

@@ -1,5 +1,5 @@
-import Component from "../Component";
-import AudioClip from "./AudioClip";
+import Component from "../Component.js";
+import AudioClip from "./AudioClip.js";
 export default class AudioPlayer extends Component {
     constructor() {
         super();

@@ -5,7 +5,7 @@
 
 "use strict";
 
-import {getParam, getCookie, setCookie, removeCookie} from './common.js';
+import {getParam, getCookie, setCookie, removeCookie} from './common.js.js';
 
 /* Name of the auto login cookie. */
 const LOGIN_COOKIE_NAME = "username";

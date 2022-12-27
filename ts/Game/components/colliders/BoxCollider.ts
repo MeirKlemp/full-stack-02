@@ -1,10 +1,15 @@
-import Transform from "../../util/Trsansform";
-import Vector from "../../util/Vector";
+import Transform from "../../util/Trsansform.js";
+import Vector from "../../util/Vector.js";
+
+export type collisionEvent  = {(self:BoxCollider,other:BoxCollider):void}
 
 export default class BoxCollider{
     private _parentTransform:Transform
     private _maxPt:Vector
     private _minPt:Vector
+    private _onCollideEvents:collisionEvent[] = [];
+    private _onTriggerEnterEvents:collisionEvent[] = [];
+    private _isTrigger:boolean = false
 
     constructor(parentTransform:Transform,pt1:Vector = Vector.left,pt2:Vector = Vector.right){
         this._parentTransform = parentTransform
@@ -20,7 +25,36 @@ export default class BoxCollider{
         return this._maxPt.add(this._parentTransform.position)
     }
 
-    isCollided(other:BoxCollider):boolean{
-        return false;
+    public registerCollisionEvent(collisionEvent:collisionEvent){
+        this._onCollideEvents.push(collisionEvent)
+    }
+
+    public checkCollision(other:BoxCollider){
+        if(this.isCollided(other)){
+            this.onCollide(other)
+            if(other._isTrigger){
+                this.onTriggerEnter(other)
+            }
+        }
+    }
+
+    public set isTrigger(value:boolean){
+        this._isTrigger = value
+    }
+
+    public get isTrigger():boolean{
+        return this.isTrigger
+    }
+
+    private isCollided(other:BoxCollider):boolean{
+        return !(this.minPos.x>other.maxPos.x||this.minPos.y>other.maxPos.y||this.maxPos.x<other.minPos.x||this.minPos.y<other.maxPos.y);
+    }
+
+    private onTriggerEnter(other:BoxCollider):void{
+        this._onTriggerEnterEvents.forEach(trigger=>trigger(this,other))
+    }
+
+    private onCollide(other:BoxCollider):void{
+        this._onCollideEvents.forEach(oce=>oce(this,other))
     }
 }

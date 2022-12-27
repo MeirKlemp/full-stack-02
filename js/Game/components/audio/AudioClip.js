@@ -1,4 +1,4 @@
-import Component from "../Component";
+import Component from "../Component.js";
 export default class AudioClip extends Component {
     constructor(name, clipPath, loop = false) {
         super();

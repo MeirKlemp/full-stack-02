@@ -1,7 +1,7 @@
-import uuid from "../../tools/uuid";
-import Game from "../gameEngine/Game";
-import Transform from "../util/Trsansform"
-import Component, { gameEvent } from "./Component";
+import uuid from "../../tools/uuid.js";
+import Game from "../gameEngine/Game.js";
+import Transform from "../util/Trsansform.js"
+import Component, { gameEvent } from "./Component.js";
 
 
 type Constructor<T> = new (...args:any[])=>T
@@ -40,7 +40,7 @@ export default class GameObject{
     }
 
     /**
-     * execute each frame in the game
+     * execute before each frame draw in the game
      */
     public update():void{
 
@@ -97,10 +97,17 @@ export default class GameObject{
      * @param componentsType The type of the components to get
      * @returns the components og the game object
      */
-    public getComponents<T>(componentsType:Constructor<T>):T[]|null{
+    public getComponents<T>(componentsType:Constructor<T>):T[]{
         return this._components.filter(c=>c instanceof componentsType).map(c=>c as T)
     }
 
+    /**
+     * Late update
+     * execute after each frame draw
+     */
+    public lateUpdate():void{
+
+    }
 
 
 }

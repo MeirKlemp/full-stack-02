@@ -1,5 +1,5 @@
-import uuid from "../../tools/uuid";
-import Transform from "../util/Trsansform";
+import uuid from "../../tools/uuid.js";
+import Transform from "../util/Trsansform.js";
 export default class GameObject {
     /**
      * craete new game object
@@ -10,6 +10,7 @@ export default class GameObject {
         this._transform = transfrom;
         this._id = uuid();
         this._components = [];
+        this._game = game;
     }
     /**
      * Add component to the game object
@@ -25,7 +26,7 @@ export default class GameObject {
         return this._id;
     }
     /**
-     * execute each frame in the game
+     * execute before each frame draw in the game
      */
     update() {
     }
@@ -40,6 +41,15 @@ export default class GameObject {
     destroy() {
         this._components.forEach(c => c.destroy());
     }
+    /**
+     * The object of the game
+     */
+    get game() {
+        return this._game;
+    }
+    /**
+     * the transform of the game object
+     */
     get transform() {
         return this._components.find(c => c instanceof Transform);
     }
@@ -67,5 +77,11 @@ export default class GameObject {
      */
     getComponents(componentsType) {
         return this._components.filter(c => c instanceof componentsType).map(c => c);
+    }
+    /**
+     * Late update
+     * execute after each frame draw
+     */
+    lateUpdate() {
     }
 }

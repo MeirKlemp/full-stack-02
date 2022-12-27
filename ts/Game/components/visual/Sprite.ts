@@ -1,7 +1,7 @@
-import Component from "../Component";
-import Vector from "../../util/Vector";
-import Displayable from "./Displayable";
-import { GAME_OBJECT_ERROR } from "../../../errors";
+import Component from "../Component.js";
+import Vector from "../../util/Vector.js";
+import Displayable from "./Displayable.js";
+import { GAME_OBJECT_ERROR } from "../../../errors.js";
 
 export default class Sprite extends Component implements Displayable {
   /**
@@ -13,10 +13,6 @@ export default class Sprite extends Component implements Displayable {
    */
   private _name: string;
   /**
-   * the image tag
-   */
-  private _img: HTMLImageElement;
-  /**
    * create new sprite
    * @param name The name of the sprite
    * @param imgSrc The image path of the sprite
@@ -25,8 +21,7 @@ export default class Sprite extends Component implements Displayable {
     super();
     this._name = name;
     this._imgSrc = imgSrc;
-    this._img = new Image();
-    this._img.src = this._imgSrc;
+
   }
 
   get position(): Vector {
@@ -34,6 +29,13 @@ export default class Sprite extends Component implements Displayable {
       throw new Error(GAME_OBJECT_ERROR);
     }
     return this._gameObject.transform.position;
+  }
+
+  resize(scale: Vector): void {
+    if(this._gameObject==null){
+      throw new Error(GAME_OBJECT_ERROR)
+    }
+    this._gameObject.transform.resize(scale)
   }
 
   /**
@@ -50,15 +52,8 @@ export default class Sprite extends Component implements Displayable {
     return this._name;
   }
 
-  /**
-   * the image of the sprite
-   */
-  public get image(): HTMLImageElement {
-    return this._img;
-  }
-
-  public displayData(): HTMLImageElement {
-    return this._img;
+  public displayData(): string {
+    return this._imgSrc;
   }
 
   public get scale(): Vector {

@@ -1,5 +1,5 @@
-import Component from "../components/Component";
-import Vector from "../util/Vector";
+import Component from "../components/Component.js";
+import Vector from "../util/Vector.js";
 export default class Sprite extends Component {
     /**
      * create new sprite
