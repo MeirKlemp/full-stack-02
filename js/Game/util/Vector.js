@@ -31,7 +31,7 @@ export default class Vector {
     }
 }
 Vector.zero = new Vector(0, 0);
-Vector.up = new Vector(0, 1);
-Vector.down = new Vector(0, -1);
+Vector.up = new Vector(0, -1);
+Vector.down = new Vector(0, 1);
 Vector.left = new Vector(-1, 0);
 Vector.right = new Vector(1, 0);

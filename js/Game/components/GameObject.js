@@ -7,9 +7,9 @@ export default class GameObject {
      * @param transfrom the game object transform
      */
     constructor(game, transfrom = new Transform()) {
-        this._transform = transfrom;
         this._id = uuid();
         this._components = [];
+        this.addComponent(transfrom);
         this._game = game;
     }
     /**
@@ -18,6 +18,7 @@ export default class GameObject {
      */
     addComponent(component) {
         component.register(this);
+        this._components.push(component);
     }
     /**
      * the game object id
@@ -31,10 +32,14 @@ export default class GameObject {
     update() {
     }
     /**
-     * wxwcute on the start of the game
+     * execute on the start of the game
      */
     start() {
     }
+    /**
+     * execute on player input
+     */
+    onInput(input) { }
     /**
      * destroy the game object
      */
@@ -83,5 +88,11 @@ export default class GameObject {
      * execute after each frame draw
      */
     lateUpdate() {
+    }
+    /**
+     * Early update
+     * execute before the normal update
+     */
+    earlyUpdate() {
     }
 }

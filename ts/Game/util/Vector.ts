@@ -3,8 +3,8 @@ export default class Vector {
   private _y: number = 0;
 
   public static zero = new Vector(0, 0);
-  public static up = new Vector(0, 1);
-  public static down = new Vector(0, -1);
+  public static up = new Vector(0, -1);
+  public static down = new Vector(0, 1);
   public static left = new Vector(-1, 0);
   public static right = new Vector(1, 0);
 

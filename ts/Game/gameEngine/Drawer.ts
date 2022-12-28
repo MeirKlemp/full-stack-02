@@ -1,20 +1,63 @@
+import { NULL_CONTEXT_ERROR } from "../../errors.js";
 import $ from "../../tools/fastAccess.js";
-import Displayable from "../components/visual/Displayable.js";
 import Renderer from "../components/visual/renderers/Renderer.js";
+import Color from "../util/Color.js";
 import Vector from "../util/Vector.js";
 
 export default class Drawer {
   private _canvas: HTMLCanvasElement;
-  private _context: CanvasRenderingContext2D | null;
+  private _context: CanvasRenderingContext2D;
+  private _bgColor: Color;
+  private _boundary: Vector;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, boundary?: Vector) {
     this._canvas = canvas;
-    this._canvas.width = $.w.innerWidth;
-    this._canvas.height = $.w.innerHeight;
-    this._context = this._canvas.getContext("2d");
+    if (boundary != null) {
+      this._boundary = boundary;
+    } else {
+      this._boundary = new Vector($.w.innerWidth, $.w.innerHeight);
+    }
+    this._canvas.width = this._boundary.x;
+    this._canvas.height = this._boundary.y;
+    this._bgColor = Color.rgb(0, 0, 0);
+    this._canvas.style.background = this._bgColor.color;
+    const context = this._canvas.getContext("2d");
+    if (context == null) {
+      throw new Error(NULL_CONTEXT_ERROR);
+    }
+    this._context = context;
   }
 
-  public drawScreen(elements: Renderer[]) {}
+  /**
+   * Render an array of renderers to the screen
+   * @param elements All the elements to draw on the screen
+   */
+  public drawScreen(elements: Renderer[]) {
+    this._context.clearRect(0, 0, $.w.innerWidth, $.w.innerHeight);
+    elements.forEach((elemnt: Renderer) => elemnt.render(this._context));
+  }
+
+  /**
+   * get the canvas Background color
+   */
+  public get backgroundColor(): Color {
+    return this._bgColor;
+  }
+
+  /**
+   * set the game background color
+   */
+  public set backgroundColor(newColor: Color) {
+    this._bgColor = newColor;
+    this._canvas.style.background = newColor.color;
+  }
+
+  /**
+   * The buttom right point of the game
+   */
+  public get boundary(): Vector {
+    return this._boundary;
+  }
   /**
    * Draw image to canvas
    * @param src The path to the image to draw
@@ -32,8 +75,12 @@ export default class Drawer {
       context.drawImage(image, position.x, position.y, scale.x, scale.y);
     return image;
   }
-  
-  public static drawSolid(position:Vector,scale:Vector,context:CanvasRenderingContext2D):void{
+
+  public static drawSolid(
+    position: Vector,
+    scale: Vector,
+    context: CanvasRenderingContext2D
+  ): void {
     //TODO :: implement that method
   }
 }

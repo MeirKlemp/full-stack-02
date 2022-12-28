@@ -24,7 +24,7 @@ export default class Transform extends Component {
         this._rotation = this._rotation.add(angle);
     }
     set position(newPosition) {
-        this.position = newPosition;
+        this._position = newPosition;
     }
     constructor(scale = new Vector(1, 1), position = Vector.zero, rotation = Vector.zero) {
         super();

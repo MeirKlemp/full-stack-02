@@ -1,7 +1,14 @@
+import Vector from "../../../util/Vector.js";
 import Renderer from "./Renderer.js";
 export default class TextRenderer extends Renderer {
-    constructor(text) {
+    /**
+     * Create new text renderer
+     * @param text The text of the renderer
+     * @param padding The padding of the text relative to the game object
+     */
+    constructor(text, padding = Vector.zero) {
         super(text);
+        this._padding = padding;
     }
     /**
      * render the element to the screen
@@ -10,6 +17,8 @@ export default class TextRenderer extends Renderer {
     render(context) {
         const text = this._displayItem;
         context.font = `${text.fontSize}px ${text.fontName}`;
-        context.fillText(text.displayData(), text.position.x, text.position.y);
+        context.fillStyle = text.color.color;
+        const pos = text.position.add(this._padding);
+        context.fillText(text.displayData(), pos.x, pos.y);
     }
 }

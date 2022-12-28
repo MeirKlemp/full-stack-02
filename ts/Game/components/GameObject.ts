@@ -7,7 +7,6 @@ import Component, { gameEvent } from "./Component.js";
 type Constructor<T> = new (...args:any[])=>T
 export default class GameObject{
     
-    protected _transform:Transform
     protected _id:string
     protected _components:Component[]
     protected _game:Game
@@ -19,9 +18,9 @@ export default class GameObject{
      * @param transfrom the game object transform
      */
     constructor(game:Game,transfrom = new Transform()){
-        this._transform = transfrom;
         this._id = uuid()
         this._components = []
+        this.addComponent(transfrom);
         this._game = game
     }
 
@@ -31,6 +30,7 @@ export default class GameObject{
      */
     public addComponent(component:Component):void{
         component.register(this)
+        this._components.push(component)
     }
     /**
      * the game object id
@@ -47,11 +47,16 @@ export default class GameObject{
     }
 
     /**
-     * wxwcute on the start of the game
+     * execute on the start of the game
      */
     public start():void{
 
     }
+
+    /**
+     * execute on player input
+     */
+    public onInput(input:string){}
 
     /**
      * destroy the game object
@@ -106,6 +111,14 @@ export default class GameObject{
      * execute after each frame draw
      */
     public lateUpdate():void{
+
+    }
+
+    /**
+     * Early update
+     * execute before the normal update
+     */
+    public earlyUpdate():void{
 
     }
 

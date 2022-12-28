@@ -19,7 +19,7 @@ export default class Component{
     }
 
     public destroy(){
-
+        
     }
     public selfDestroy():void{
         this._gameObject?.removeComponent(this._id);

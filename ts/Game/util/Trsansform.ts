@@ -35,7 +35,7 @@ export default class Transform extends Component{
     }
 
     public set position(newPosition:Vector){
-        this.position = newPosition;
+        this._position = newPosition;
     }
 
     constructor(scale:Vector = new Vector(1,1),position:Vector = Vector.zero,rotation:Vector = Vector.zero){

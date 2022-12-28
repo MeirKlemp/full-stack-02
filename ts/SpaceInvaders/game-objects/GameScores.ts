@@ -1,17 +1,26 @@
-import GameObject from "../../Game/components/GameObject";
-import TextBlock from "../../Game/components/visual/Text";
-import Game from "../../Game/gameEngine/Game";
-import Transform from "../../Game/util/Trsansform";
-import Vector from "../../Game/util/Vector";
+import GameObject from "../../Game/components/GameObject.js";
+import TextRenderer from "../../Game/components/visual/renderers/TextRenderer.js";
+import TextBlock from "../../Game/components/visual/Text.js";
+import Game from "../../Game/gameEngine/Game.js";
+import Color from "../../Game/util/Color.js";
+import Transform from "../../Game/util/Trsansform.js";
+import Vector from "../../Game/util/Vector.js";
+import $ from "../../tools/fastAccess.js";
+
+const scoresLabel = "S C O R E"
 
 export default class GameScores extends GameObject{
     private _scores:number = 0
+    
+    constructor(game:Game,transform?:Transform){
+        super(game,transform)
+        const textBlock = new TextBlock("0",Color.WHITE,30,"ArcadeClassic")
+        this.addComponent(textBlock)
+        this.addComponent(new TextRenderer(textBlock,Vector.down.mult(30)))
+        const scoreTitleBlock = new TextBlock(scoresLabel,Color.WHITE,30,"ArcadeClassic")
+        this.addComponent(scoreTitleBlock)
+        this.addComponent(new TextRenderer(scoreTitleBlock))
 
-
-    constructor(game:Game){
-        super(game)
-        this.transform.position = Vector.zero
-        this.addComponent(new TextBlock("0"))
     }
 
     public get scores():number{
@@ -24,12 +33,17 @@ export default class GameScores extends GameObject{
 
     public update(): void {
         super.update();
-        this.scores++;
         
         const text = this.getComponent(TextBlock);
         if(text!=null){
-            text.text = this.scores.toString();
+            text.text = this.format;
         }
     }
+
+    private get format():string{
+        const str = String(this._scores).padStart(4,'0');
+        return str.replace(/(\d)/gi,"$1 ")
+    }
+
     
 }

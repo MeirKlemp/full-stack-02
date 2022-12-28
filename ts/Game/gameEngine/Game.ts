@@ -1,20 +1,26 @@
 import GameObject from "../components/GameObject.js"
 import Renderer from "../components/visual/renderers/Renderer.js";
+import Vector from "../util/Vector.js";
 import Drawer from "./Drawer.js";
 
 export type gameInit = {(game:Game):void}
+type Constructor<T> = new (...args:any[])=>T
 export default class Game{
 
     private _gameObjects:GameObject[]
     private _drawer:Drawer
+    private _boundary:Vector
     private static readonly fps = 60;
     public static readonly deltaTime = 1000/Game.fps
      
 
-    constructor(drawer:Drawer,initFunction:gameInit){
+    constructor(drawer:Drawer,initFunction?:gameInit){
         this._gameObjects = []
         this._drawer = drawer
-        this.init(initFunction)
+        this._boundary = this._drawer.boundary
+        if(initFunction!=null){
+            this.init(initFunction)
+        }
     }
 
     public addGameObject(gameObject:GameObject){
@@ -36,6 +42,10 @@ export default class Game{
         this._gameObjects.forEach(go=>go.update())
     }
 
+    public onInput(input:string):void{
+        this._gameObjects.forEach(go=>go.onInput(input))
+    }
+
     public drawScreen():void{
         const renderers:Renderer[] = this._gameObjects.reduce<Renderer[]>((prev:Renderer[],go:GameObject)=>[...prev,...go.getComponents(Renderer)],[])
         this.drawer.drawScreen(renderers)
@@ -43,6 +53,10 @@ export default class Game{
 
     public lateUpdate():void{
         this._gameObjects.forEach(go=>go.lateUpdate())
+    }
+
+    public earlyUpdate():void{
+        this._gameObjects.forEach(go=>go.earlyUpdate())
     }
 
     public destroy(id:string){
@@ -60,6 +74,28 @@ export default class Game{
 
     private init(initFunction:gameInit):void{
         initFunction(this)
+    }
+
+    /**
+     * get one game object with the given type
+     * @param gameObjectType the type of the game object to find
+     * @returns game object with the ginving type or null if not founded
+     */
+    public findGameObjectByType<T>(gameObjectType:Constructor<T>):T|null{
+        return this._gameObjects.find(go=>go instanceof gameObjectType) as T
+    }
+
+    /**
+     * Get all the game objects with the given type
+     * @param gameObjectsType the type of the game objects to find
+     * @returns all the game objects with the given type
+     */
+    public findGameObjectsByType<T>(gameObjectsType:Constructor<T>):T[]{
+        return this._gameObjects.filter(go=>go instanceof gameObjectsType) as T[]
+    } 
+
+    public get boundary():Vector{
+        return this._boundary
     }
     
 }

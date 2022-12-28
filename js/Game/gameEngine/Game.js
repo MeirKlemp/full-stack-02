@@ -3,7 +3,10 @@ export default class Game {
     constructor(drawer, initFunction) {
         this._gameObjects = [];
         this._drawer = drawer;
-        this.init(initFunction);
+        this._boundary = this._drawer.boundary;
+        if (initFunction != null) {
+            this.init(initFunction);
+        }
     }
     addGameObject(gameObject) {
         this._gameObjects.push(gameObject);
@@ -19,12 +22,18 @@ export default class Game {
     update() {
         this._gameObjects.forEach(go => go.update());
     }
+    onInput(input) {
+        this._gameObjects.forEach(go => go.onInput(input));
+    }
     drawScreen() {
         const renderers = this._gameObjects.reduce((prev, go) => [...prev, ...go.getComponents(Renderer)], []);
         this.drawer.drawScreen(renderers);
     }
     lateUpdate() {
         this._gameObjects.forEach(go => go.lateUpdate());
+    }
+    earlyUpdate() {
+        this._gameObjects.forEach(go => go.earlyUpdate());
     }
     destroy(id) {
         var _a;
@@ -39,6 +48,25 @@ export default class Game {
     }
     init(initFunction) {
         initFunction(this);
+    }
+    /**
+     * get one game object with the given type
+     * @param gameObjectType the type of the game object to find
+     * @returns game object with the ginving type or null if not founded
+     */
+    findGameObjectByType(gameObjectType) {
+        return this._gameObjects.find(go => go instanceof gameObjectType);
+    }
+    /**
+     * Get all the game objects with the given type
+     * @param gameObjectsType the type of the game objects to find
+     * @returns all the game objects with the given type
+     */
+    findGameObjectsByType(gameObjectsType) {
+        return this._gameObjects.filter(go => go instanceof gameObjectsType);
+    }
+    get boundary() {
+        return this._boundary;
     }
 }
 Game.fps = 60;
