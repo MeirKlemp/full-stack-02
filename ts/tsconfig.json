@@ -1,0 +1,11 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "outDir": "../js",
+        "lib": ["ES6","DOM","ES2015","DOM.Iterable","WebWorker.ImportScripts","ScriptHost"],
+        "target": "ES6",
+        "strict": true,
+        "allowJs": true,
+        "forceConsistentCasingInFileNames": true
+    }
+} 
