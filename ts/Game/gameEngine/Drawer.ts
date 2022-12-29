@@ -64,15 +64,12 @@ export default class Drawer {
    * @returns The rendered image tag
    */
   public static drawImage(
-    src: string,
+    image: HTMLImageElement,
     position: Vector,
     scale: Vector,
     context: CanvasRenderingContext2D
   ): HTMLImageElement {
-    const image: HTMLImageElement = document.createElement("img");
-    image.src = src;
-    image.onload = () =>
-      context.drawImage(image, position.x, position.y, scale.x, scale.y);
+    context.drawImage(image, position.x, position.y, scale.x, scale.y);
     return image;
   }
 

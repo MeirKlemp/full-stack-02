@@ -1,15 +1,17 @@
-import Component from "../Component.js";
 import Vector from "../../util/Vector.js";
 import Displayable from "./Displayable.js";
 import Sprite from "./Sprite.js";
 import { GAME_OBJECT_ERROR } from "../../../errors.js";
+import ImageVisulizer from "./ImageVisualizer.js";
+import GameObject from "../GameObject.js";
+import Game from "../../gameEngine/Game.js";
 
 
 
 /**
  * Presents animation for animating GameObjects
  */
-export default class Animation extends Displayable {
+export default class Animation extends Displayable implements ImageVisulizer {
   /**
    * The time between each sprite change
    */
@@ -21,11 +23,15 @@ export default class Animation extends Displayable {
   /**
    * The paths of all the images
    */
-  private _imagesPaths:string[];
+  private _sprites:Sprite[];
   /**
    * the name of the animation
    */
   private _name:string;
+  /**
+   * the current time of the animation
+   */
+  private _currentTime:number = 0
 
   /**
    * Create new anumation
@@ -34,11 +40,11 @@ export default class Animation extends Displayable {
    */
   constructor( name:string = "untitled animation",timeBetweenFrames: number = 1000,...imagesPaths:string[]) {
     super();
-    this._imagesPaths = imagesPaths
     this._name = name
-    const sprites:Sprite[] = []
-    for(const path of imagesPaths){
-
+    this._sprites = []
+    for(let i=0;i<imagesPaths.length;i++){
+      const sprite = new Sprite(`${name}_${i}`,imagesPaths[i])
+      this._sprites.push(sprite)
     }
     this._timeBetweenFrames = timeBetweenFrames;
   }
@@ -66,17 +72,21 @@ export default class Animation extends Displayable {
     if(this._gameObject==null){
       throw new Error(GAME_OBJECT_ERROR)
     }
-    const timeFromStart: number =
-      new Date().getMilliseconds() - this._startTime;
-    const imageIndex:number = (timeFromStart / this._timeBetweenFrames) % this._imagesPaths.length
-    const path:string =  this._imagesPaths[imageIndex];
-    const currentSprite = new Sprite(this._name+imageIndex,path)
-    currentSprite.register(this._gameObject)
+    const imageIndex:number = Math.floor(this._currentTime / this._timeBetweenFrames) % this._sprites.length
+    const currentSprite = this._sprites[imageIndex]
     return currentSprite
   }
 
+
   public displayData(): string {
     return this.getCurrenSprite().displayData();
+  }
+
+  /**
+   * the image to display now
+   */
+  public get  image():HTMLImageElement{
+    return this.getCurrenSprite().image
   }
 
   /**
@@ -85,5 +95,14 @@ export default class Animation extends Displayable {
    */
   public get currentSprite():Sprite{
     return this.getCurrenSprite()
+  }
+
+  public register(gameObject: GameObject): void {
+    super.register(gameObject)
+    this._sprites.forEach(s=>s.register(gameObject))
+  }
+
+  public componentUpdate():void{
+    this._currentTime+=Game.deltaTime
   }
 }

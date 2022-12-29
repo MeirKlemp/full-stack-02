@@ -24,6 +24,8 @@ export default class Component{
     public selfDestroy():void{
         this._gameObject?.removeComponent(this._id);
     }
+
+    public componentUpdate():void{}
 }
 
 export type gameEvent = {(component:Component):void}

@@ -1,4 +1,3 @@
-import Drawer from "../../../gameEngine/Drawer.js";
 import Renderer from "./Renderer.js";
 export default class AnimationRenderer extends Renderer {
     constructor(animation) {
@@ -7,6 +6,6 @@ export default class AnimationRenderer extends Renderer {
     }
     render(context) {
         const spriteToDraw = this._animation.currentSprite;
-        Drawer.drawImage(spriteToDraw.displayData(), this._animation.position, this._animation.scale, context);
+        //Drawer.drawImage(spriteToDraw.displayData(),this._animation.position,this._animation.scale,context)
     }
 }

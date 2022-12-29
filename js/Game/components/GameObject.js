@@ -95,4 +95,10 @@ export default class GameObject {
      */
     earlyUpdate() {
     }
+    /**
+     * update all teh components
+     */
+    componentUpdate() {
+        this._components.forEach(c => c.componentUpdate());
+    }
 }

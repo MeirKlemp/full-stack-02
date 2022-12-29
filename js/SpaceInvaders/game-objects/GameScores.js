@@ -8,10 +8,11 @@ export default class GameScores extends GameObject {
     constructor(game, transform) {
         super(game, transform);
         this._scores = 0;
-        const textBlock = new TextBlock("0", Color.WHITE, 30, "ArcadeClassic");
+        const size = 40;
+        const textBlock = new TextBlock("0", Color.WHITE, size, "ArcadeClassic");
         this.addComponent(textBlock);
-        this.addComponent(new TextRenderer(textBlock, Vector.down.mult(30)));
-        const scoreTitleBlock = new TextBlock(scoresLabel, Color.WHITE, 30, "ArcadeClassic");
+        this.addComponent(new TextRenderer(textBlock, Vector.down.mult(size)));
+        const scoreTitleBlock = new TextBlock(scoresLabel, Color.WHITE, size, "ArcadeClassic");
         this.addComponent(scoreTitleBlock);
         this.addComponent(new TextRenderer(scoreTitleBlock));
     }
@@ -30,6 +31,6 @@ export default class GameScores extends GameObject {
     }
     get format() {
         const str = String(this._scores).padStart(4, '0');
-        return str.replace(/(\d)/gi, "$1 ");
+        return str.replace(/(\d)/gi, "$1  ");
     }
 }

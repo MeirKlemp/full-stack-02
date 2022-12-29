@@ -1,6 +1,6 @@
-import Component from "../Component.js";
+import Displayable from "./Displayable.js";
 import { GAME_OBJECT_ERROR } from "../../../errors.js";
-export default class Sprite extends Component {
+export default class Sprite extends Displayable {
     /**
      * create new sprite
      * @param name The name of the sprite
@@ -10,12 +10,17 @@ export default class Sprite extends Component {
         super();
         this._name = name;
         this._imgSrc = imgSrc;
+        this._image = document.createElement('img');
+        this._image.src = imgSrc;
     }
     get position() {
         if (this._gameObject == null) {
             throw new Error(GAME_OBJECT_ERROR);
         }
         return this._gameObject.transform.position;
+    }
+    get image() {
+        return this._image;
     }
     resize(scale) {
         if (this._gameObject == null) {

@@ -16,4 +16,5 @@ export default class Component {
         var _a;
         (_a = this._gameObject) === null || _a === void 0 ? void 0 : _a.removeComponent(this._id);
     }
+    componentUpdate() { }
 }

@@ -1,6 +1,8 @@
 import Vector from "../../util/Vector.js";
-export default class BoxCollider {
+import Component from "../Component.js";
+export default class BoxCollider extends Component {
     constructor(parentTransform, pt1 = Vector.left, pt2 = Vector.right) {
+        super();
         this._onCollideEvents = [];
         this._onTriggerEnterEvents = [];
         this._isTrigger = false;

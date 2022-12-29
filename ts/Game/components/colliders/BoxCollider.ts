@@ -1,9 +1,10 @@
 import Transform from "../../util/Trsansform.js";
 import Vector from "../../util/Vector.js";
+import Component from "../Component.js";
 
 export type collisionEvent  = {(self:BoxCollider,other:BoxCollider):void}
 
-export default class BoxCollider{
+export default class BoxCollider extends Component{
     private _parentTransform:Transform
     private _maxPt:Vector
     private _minPt:Vector
@@ -12,6 +13,7 @@ export default class BoxCollider{
     private _isTrigger:boolean = false
 
     constructor(parentTransform:Transform,pt1:Vector = Vector.left,pt2:Vector = Vector.right){
+        super()
         this._parentTransform = parentTransform
         this._maxPt = new Vector(Math.max(pt1.x,pt2.x),Math.max(pt1.y,pt2.y))
         this._minPt = new Vector(Math.min(pt1.x,pt2.x),Math.min(pt1.y,pt2.y))

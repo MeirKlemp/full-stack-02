@@ -122,5 +122,11 @@ export default class GameObject{
 
     }
 
+    /**
+     * update all teh components
+     */
+    public componentUpdate():void{
+        this._components.forEach(c=>c.componentUpdate())
+    }        
 
 }

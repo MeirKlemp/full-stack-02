@@ -1,0 +1,7 @@
+@font-face {
+    font-family: 'ArcadeClassic';
+    font-style: normal;
+    font-weight: 400;
+    src: local('ArcadeClassic'), url('../fonts/ARCADECLASSIC.woff') format('woff');
+}
+

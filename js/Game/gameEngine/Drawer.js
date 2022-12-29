@@ -53,10 +53,8 @@ export default class Drawer {
      * @param src The path to the image to draw
      * @returns The rendered image tag
      */
-    static drawImage(src, position, scale, context) {
-        const image = document.createElement("img");
-        image.src = src;
-        image.onload = () => context.drawImage(image, position.x, position.y, scale.x, scale.y);
+    static drawImage(image, position, scale, context) {
+        context.drawImage(image, position.x, position.y, scale.x, scale.y);
         return image;
     }
     static drawSolid(position, scale, context) {

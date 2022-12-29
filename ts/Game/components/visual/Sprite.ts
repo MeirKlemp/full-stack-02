@@ -1,9 +1,9 @@
-import Component from "../Component.js";
 import Vector from "../../util/Vector.js";
 import Displayable from "./Displayable.js";
 import { GAME_OBJECT_ERROR } from "../../../errors.js";
+import ImageVisulizer from "./ImageVisualizer.js";
 
-export default class Sprite extends Component implements Displayable {
+export default class Sprite extends Displayable implements ImageVisulizer {
   /**
    * The path of the image
    */
@@ -13,6 +13,11 @@ export default class Sprite extends Component implements Displayable {
    */
   private _name: string;
   /**
+   * the image element of the sprite
+   */
+  private _image:HTMLImageElement
+
+  /**
    * create new sprite
    * @param name The name of the sprite
    * @param imgSrc The image path of the sprite
@@ -21,14 +26,19 @@ export default class Sprite extends Component implements Displayable {
     super();
     this._name = name;
     this._imgSrc = imgSrc;
-
+    this._image = document.createElement('img')
+    this._image.src = imgSrc
   }
 
-  get position(): Vector {
+  public get position(): Vector {
     if(this._gameObject==null){
       throw new Error(GAME_OBJECT_ERROR);
     }
     return this._gameObject.transform.position;
+  }
+
+  public get image():HTMLImageElement{
+    return this._image
   }
 
   resize(scale: Vector): void {

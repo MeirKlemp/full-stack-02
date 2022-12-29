@@ -3,9 +3,11 @@ import Renderer from "./Renderer.js";
 export default class SpriteRenderer extends Renderer {
     constructor(sprite) {
         super(sprite);
+        this._image = document.createElement('img');
+        this._image.src = sprite.displayData();
     }
     render(context) {
         const sprite = this._displayItem;
-        Drawer.drawImage(sprite.displayData(), sprite.position, sprite.scale, context);
+        Drawer.drawImage(this._image, sprite.position, sprite.scale, context);
     }
 }
