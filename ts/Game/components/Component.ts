@@ -1,5 +1,6 @@
+import { GAME_OBJECT_ERROR } from "../../errors.js";
 import uuid from "../../tools/uuid.js";
-import GameObject from "./GameObject.js";
+import GameObject from "../GameObject.js";
 
 export default class Component{
     protected _id:string
@@ -23,6 +24,13 @@ export default class Component{
     }
     public selfDestroy():void{
         this._gameObject?.removeComponent(this._id);
+    }
+
+    public get gameObject():GameObject{
+        if(!this._gameObject){
+            throw new Error(GAME_OBJECT_ERROR)
+        }
+        return this._gameObject
     }
 
     public componentUpdate():void{}

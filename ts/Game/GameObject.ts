@@ -1,7 +1,7 @@
-import uuid from "../../tools/uuid.js";
-import Game from "../gameEngine/Game.js";
-import Transform from "../util/Trsansform.js"
-import Component, { gameEvent } from "./Component.js";
+import uuid from "../tools/uuid.js";
+import Game from "./gameEngine/Game.js";
+import Transform from "./util/Trsansform.js"
+import Component, { gameEvent } from "./components/Component.js";
 
 
 type Constructor<T> = new (...args:any[])=>T
@@ -52,11 +52,6 @@ export default class GameObject{
     public start():void{
 
     }
-
-    /**
-     * execute on player input
-     */
-    public onInput(input:string){}
 
     /**
      * destroy the game object
@@ -128,5 +123,9 @@ export default class GameObject{
     public componentUpdate():void{
         this._components.forEach(c=>c.componentUpdate())
     }        
+
+    public getAllComponents<T>(componentType:Constructor<T>):T[]{
+        return this.getComponents(componentType)
+    }
 
 }

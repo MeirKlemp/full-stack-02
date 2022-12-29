@@ -26,7 +26,7 @@ export default class Transform extends Component{
     public resize(newSize:Vector):void{
         this._scale = newSize
         if(this._gameObject!=null){
-            this._gameObject.getComponents(Resizable).forEach(r=>r.resize(this.scale))
+            this._scale = newSize
         }
     }
 

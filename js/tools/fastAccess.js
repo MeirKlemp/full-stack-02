@@ -13,4 +13,13 @@ export default class $ {
     static get w() {
         return window;
     }
+    static cookie(key) {
+        const cookies = document.cookie;
+        const cookiesArr = cookies.split(';');
+        const retPair = cookiesArr.find(c => c.split('=')[0].replace(/\s/g, '') === key);
+        if (!retPair) {
+            return undefined;
+        }
+        return retPair.split('=')[1];
+    }
 }

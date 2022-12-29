@@ -1,7 +1,10 @@
 import Renderer from "../components/visual/renderers/Renderer.js";
+import Vector from "../util/Vector.js";
+import GameObjectGroup from "../GameObjectGroup.js";
+import Transform from "../util/Trsansform.js";
 export default class Game {
     constructor(drawer, initFunction) {
-        this._gameObjects = [];
+        this._gameObjects = new GameObjectGroup(this, new Transform(new Vector(1, 1)));
         this._drawer = drawer;
         this._boundary = this._drawer.boundary;
         if (initFunction != null) {
@@ -9,39 +12,42 @@ export default class Game {
         }
     }
     addGameObject(gameObject) {
-        this._gameObjects.push(gameObject);
+        this._gameObjects.addChild(gameObject);
     }
     start() {
-        this._gameObjects.forEach((go) => {
-            go.start();
-        });
+        this._gameObjects.start();
     }
     get drawer() {
         return this._drawer;
     }
     update() {
-        this._gameObjects.forEach((go) => go.update());
+        this._gameObjects.update();
     }
-    onInput(input) {
-        this._gameObjects.forEach((go) => go.onInput(input));
-    }
+    //   public onInput(input: string): void {
+    //     this._gameObjects.onInput(input)
+    //   }
     drawScreen() {
-        const renderers = this._gameObjects.reduce((prev, go) => [
-            ...prev,
-            ...go.getComponents(Renderer),
-        ], []);
+        const renderers = this._gameObjects.getAllComponents(Renderer);
         this.drawer.drawScreen(renderers);
     }
     lateUpdate() {
-        this._gameObjects.forEach((go) => go.lateUpdate());
+        this._gameObjects.lateUpdate();
     }
     earlyUpdate() {
-        this._gameObjects.forEach((go) => go.earlyUpdate());
+        document.addEventListener("keydown", e => {
+            e.preventDefault();
+            Game.keyboardData[e.code] = true;
+        });
+        document.addEventListener("keyup", e => {
+            e.preventDefault();
+            Game.keyboardData[e.code] = false;
+        });
+        this._gameObjects.earlyUpdate();
     }
     destroy(id) {
         var _a;
         (_a = this._gameObjects.find((go) => go.id == id)) === null || _a === void 0 ? void 0 : _a.destroy();
-        this._gameObjects = this._gameObjects.filter((go) => go.id == id);
+        this._gameObjects.applyFilter((go) => go.id != id);
     }
     findGameObjectById(id) {
         return this._gameObjects.find((go) => go.id == id);
@@ -78,7 +84,7 @@ export default class Game {
      * run the component update for all the game objects
      */
     componentUpdate() {
-        this._gameObjects.forEach((go) => go.componentUpdate());
+        this._gameObjects.componentUpdate();
     }
     /**
      * saves data to the locale storage
@@ -100,6 +106,16 @@ export default class Game {
         }
         return JSON.parse(res);
     }
+    static getInput(keyCode) {
+        return Game.keyboardData[keyCode];
+    }
+    /**
+     * the root game object
+     */
+    get rootGameObject() {
+        return this._gameObjects;
+    }
 }
 Game.fps = 60;
+Game.keyboardData = [];
 Game.deltaTime = 1 / Game.fps;

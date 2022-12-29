@@ -1,4 +1,4 @@
-import GameObject from "../../Game/components/GameObject.js";
+import GameObject from "../../Game/GameObject.js";
 import TextRenderer from "../../Game/components/visual/renderers/TextRenderer.js";
 import TextBlock from "../../Game/components/visual/Text.js";
 import Color from "../../Game/util/Color.js";

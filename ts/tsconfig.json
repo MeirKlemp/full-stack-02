@@ -1,5 +1,4 @@
 {
-    "include": ["./**/*"],
     "compileOnSave": true,
     "compilerOptions": {
         "outDir": "../js",

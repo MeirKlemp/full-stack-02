@@ -1,14 +1,19 @@
+import { GAME_OBJECT_ERROR } from "../../../errors.js";
 import Vector from "../../util/Vector.js";
 import Component from "../Component.js";
 export default class BoxCollider extends Component {
-    constructor(parentTransform, pt1 = Vector.left, pt2 = Vector.right) {
+    /**
+     * Create new Box collider
+     * @param position The position of the collider relative to the game object
+     * @param scale the scale of the collider
+     */
+    constructor(position, scale) {
         super();
         this._onCollideEvents = [];
         this._onTriggerEnterEvents = [];
         this._isTrigger = false;
-        this._parentTransform = parentTransform;
-        this._maxPt = new Vector(Math.max(pt1.x, pt2.x), Math.max(pt1.y, pt2.y));
-        this._minPt = new Vector(Math.min(pt1.x, pt2.x), Math.min(pt1.y, pt2.y));
+        this._maxPt = new Vector(Math.max(position.x, scale.x), Math.max(position.y, scale.y));
+        this._minPt = new Vector(Math.min(position.x, scale.x), Math.min(position.y, scale.y));
     }
     get minPos() {
         return this._minPt.add(this._parentTransform.position);
@@ -16,9 +21,26 @@ export default class BoxCollider extends Component {
     get maxPos() {
         return this._maxPt.add(this._parentTransform.position);
     }
+    get _parentTransform() {
+        if (!this._gameObject) {
+            throw new Error(GAME_OBJECT_ERROR);
+        }
+        return this._gameObject.transform;
+    }
+    /**
+     * Add event to the collider
+     * @param collisionEvent event to shot on collision
+     */
     registerCollisionEvent(collisionEvent) {
         this._onCollideEvents.push(collisionEvent);
     }
+    registerTriggerCollisionEvent(collisionEvent) {
+        this._onTriggerEnterEvents.push(collisionEvent);
+    }
+    /**
+     * check if there is collision with another collider and execte the collisions events if yes
+     * @param other  another collider
+     */
     checkCollision(other) {
         if (this.isCollided(other)) {
             this.onCollide(other);
@@ -27,9 +49,15 @@ export default class BoxCollider extends Component {
             }
         }
     }
+    /**
+     * is the collider is trigger collider
+     */
     set isTrigger(value) {
         this._isTrigger = value;
     }
+    /**
+     * is the collider is trigger collider
+     */
     get isTrigger() {
         return this.isTrigger;
     }

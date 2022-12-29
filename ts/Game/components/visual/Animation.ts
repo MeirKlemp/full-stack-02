@@ -3,7 +3,7 @@ import Displayable from "./Displayable.js";
 import Sprite from "./Sprite.js";
 import { GAME_OBJECT_ERROR } from "../../../errors.js";
 import ImageVisulizer from "./ImageVisualizer.js";
-import GameObject from "../GameObject.js";
+import GameObject from "../../GameObject.js";
 import Game from "../../gameEngine/Game.js";
 
 

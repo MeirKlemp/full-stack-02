@@ -1,4 +1,7 @@
-import GameObject from "../../Game/components/GameObject.js";
+import GameObject from "../../Game/GameObject.js";
+import GameScores from "./GameScores.js";
+import { BAD_CREDENTIALS, GAME_SCORES_NOT_FOUND } from "../../errors.js";
+import $ from "../../tools/fastAccess.js";
 export default class GameManager extends GameObject {
     constructor(game) {
         super(game);
@@ -6,6 +9,7 @@ export default class GameManager extends GameObject {
         this._enemyMovingDown = false;
         this._positionSwapped = false;
         this.downStep = 10;
+        this._canPlayerShoot = true;
     }
     lateUpdate() {
         this._enemyMovingDown = false;
@@ -43,5 +47,22 @@ export default class GameManager extends GameObject {
      */
     set isMovingDown(value) {
         this._enemyMovingDown = value;
+    }
+    gameOver(isWin) {
+        const score = this.game.findGameObjectByType(GameScores);
+        if (!score) {
+            throw new Error(GAME_SCORES_NOT_FOUND);
+        }
+        const userKey = $.cookie('user');
+        if (!userKey) {
+            throw new Error(BAD_CREDENTIALS);
+        }
+        this.game.saveState(userKey, { score: score.scores, isWin: isWin });
+    }
+    get canPlayerShoot() {
+        return this._canPlayerShoot;
+    }
+    set canPlayerShoot(value) {
+        this._canPlayerShoot = value;
     }
 }

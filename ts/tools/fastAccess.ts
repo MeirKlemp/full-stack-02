@@ -16,5 +16,14 @@ export default  class ${
         return window
     }
 
+    public static cookie(key:string):string|undefined{
+        const cookies = document.cookie
+        const cookiesArr = cookies.split(';')
+        const retPair = cookiesArr.find(c=>c.split('=')[0].replace(/\s/g,'')===key)
+        if(!retPair){
+            return undefined
+        }
+        return retPair.split('=')[1]
+    }
 
 }

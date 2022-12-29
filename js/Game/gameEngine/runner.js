@@ -2,7 +2,7 @@ import Game from "./Game.js";
 import $ from "../../tools/fastAccess.js";
 import Drawer from "./Drawer.js";
 import BoxCollider from "../components/colliders/BoxCollider.js";
-import GameObject from "../components/GameObject.js";
+var keys = {};
 /**
  * Create and run game
  * @param containerId The div that will contain the game
@@ -18,21 +18,22 @@ export default function runGame(containerId, initGame = (game) => { }, gameBound
     const drawer = new Drawer(canvas, gameBoundary);
     const game = new Game(drawer, initGame);
     game.start();
-    setInterval(() => {
-        game.earlyUpdate();
-        game.componentUpdate();
-        checkCollision(getColliders(game));
-        game.update();
-        game.drawScreen();
-        game.lateUpdate();
-    }, Game.deltaTime * 1000);
-    document.onkeydown = e => {
-        game.onInput(e.code);
-    };
-    document.onmousedown = e => {
-        game.onInput(`Mouse${e.button.toString()}`);
-    };
+    executeIntervals(game);
     return game;
+}
+function executeIntervals(game) {
+    requestAnimationFrame(() => {
+        runGameIntervals(game);
+        executeIntervals(game);
+    });
+}
+function runGameIntervals(game) {
+    game.earlyUpdate();
+    game.componentUpdate();
+    checkCollision(getColliders(game));
+    game.update();
+    game.drawScreen();
+    game.lateUpdate();
 }
 /**
  * check the collision of all the given colliders
@@ -53,7 +54,5 @@ function checkCollision(colliders) {
  * @returns all the colliders in teh given game
  */
 function getColliders(game) {
-    return game.findGameObjectsByType(GameObject).reduce((prev, next) => {
-        return [...prev, ...next.getComponents(BoxCollider)];
-    }, []);
+    return game.rootGameObject.getAllComponents(BoxCollider);
 }
