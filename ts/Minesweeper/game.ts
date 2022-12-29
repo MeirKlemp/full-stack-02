@@ -145,6 +145,11 @@ export class Minesweeper {
      * Plays a block by its index on the game's board. If this is the
      * first move, the game's board will be generated, and the game will start
      * couting the seconds since start.
+     *
+     * If the player played a block with a bomb, they lose, and the played
+     * block will be visible. @see gameOver and @see won to check the game
+     * status.
+     *
      * @param idx the index of the played block on the game's board.
      * @return the indices of the blocks that became visible. If it's game over
      * or the selected block is not hidden, returns an empty array.
@@ -168,6 +173,7 @@ export class Minesweeper {
             this._endDate = new Date();
             this._gameOver = true;
             this._won = false;
+            this._board[idx].mode = Modes.VISIBLE;
             return visibles;
         }
 
