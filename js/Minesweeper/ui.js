@@ -5,6 +5,7 @@ const NO_BOMB_IMAGE_PATH = "/media/Minesweeper/no-bomb.png";
 // The blocks of the HTML board.
 const blocks = new Array();
 let game = new Minesweeper(10, 10, 10);
+// Handle to the interval that updates the seconds on the screen.
 let timerInterval = null;
 function loadGame(rows, columns, bombs) {
     game.reset(rows, columns, bombs);
@@ -12,6 +13,7 @@ function loadGame(rows, columns, bombs) {
     const board = document.getElementById("board");
     board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
     board.style.width = `${columns * COLUMN_SIZE_PX}px`;
+    board.style.height = `${rows * COLUMN_SIZE_PX}px`;
     board.innerHTML = '';
     // Clear the blocks array.
     blocks.length = 0;
