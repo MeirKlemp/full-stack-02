@@ -142,6 +142,17 @@ function updateTimer() {
     const timer = document.getElementById("timer");
     timer.textContent = game.seconds.toString();
 }
+/**
+ * Parses an integer within a specific range from a string. If the string is
+ * not a number, or not in the range, the function will alert the user with
+ * a property name.
+ *
+ * @param name  the property name to show the user on error.
+ * @param min   the minimum value of the integer's range.
+ * @param max   the maximum value of the integer's range.
+ * @param s     the string to parse.
+ * @return the parsed integer if in range, or `null` otherwise.
+ */
 function parseIntInRange(name, min, max, s) {
     const int = parseInt(s);
     if (min <= int && int <= max) {
