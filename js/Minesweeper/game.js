@@ -73,12 +73,13 @@ export class Minesweeper {
      * Creates a new game of Minesweeper.
      * @param rows      the number of rows the game's board will have.
      * @param columns   the number of columns the game's board will have.
-     * @param bombs     the number of bombs the game will have.
+     * @param bombs     the number of bombs the game will have. It won't be
+     *                  greater than the number of blocks in the board minus 1.
      */
     constructor(rows, columns, numBombs) {
         this._rows = rows;
         this._columns = columns;
-        this._numBombs = numBombs;
+        this._numBombs = Math.min(numBombs, this._rows * this._columns - 1);
         this._bombsLeft = this._numBombs;
         this._gameOver = false;
         this._won = false;
@@ -105,7 +106,7 @@ export class Minesweeper {
             this._columns = columns;
         }
         if (typeof numBombs !== "undefined" && this._numBombs != numBombs) {
-            this._numBombs = numBombs;
+            this._numBombs = Math.min(numBombs, this._rows * this._columns - 1);
         }
         if (this._board.length != this._rows * this._columns) {
             this._board = Array(this._rows * this._columns);
