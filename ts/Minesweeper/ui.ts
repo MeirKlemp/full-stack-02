@@ -1,8 +1,15 @@
 import {Minesweeper, Modes, Block} from './game.js';
 
-const COLUMN_SIZE_PX = 40;
+const BLOCK_SIZE_PX = 40;
 const BOMB_IMAGE_PATH = "/media/Minesweeper/bomb.png";
 const NO_BOMB_IMAGE_PATH = "/media/Minesweeper/no-bomb.png";
+
+const MIN_ROWS = 1;
+const MAX_ROWS = 100;
+const MIN_COLUMNS = 1;
+const MAX_COLUMNS = 100;
+const MIN_BOMBS = 1;
+const MAX_BOMBS = 2500;
 
 // The blocks of the HTML board.
 const blocks = new Array<HTMLElement>();
@@ -10,21 +17,32 @@ let game = new Minesweeper(10, 10, 10);
 // Handle to the interval that updates the seconds on the screen.
 let timerInterval: number | null = null;
 
-function loadGame(rows:number, columns:number, bombs:number):void {
+/**
+ * Restarts the minesweeper game and creates the UI board content.
+ */
+function loadGame():void {
+    // Extract rows, columns and bombs from the input fields.
+    const rows = parseIntInRange("Rows", MIN_ROWS, MAX_ROWS,
+        (<HTMLInputElement>document.getElementById("rows")!).value);
+    const columns = parseIntInRange("Columns", MIN_COLUMNS, MAX_COLUMNS,
+        (<HTMLInputElement>document.getElementById("columns")!).value);
+    const bombs = parseIntInRange("Bombs", MIN_BOMBS, MAX_BOMBS,
+        (<HTMLInputElement>document.getElementById("bombs")!).value);
+    if (rows === null || columns === null || bombs === null) {
+        return;
+    }
+
     game.reset(rows, columns, bombs);
 
     // Resets the board's content and size.
     const board = document.getElementById("board")!;
     board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`
-    board.style.width = `${columns * COLUMN_SIZE_PX}px`;
-    board.style.height = `${rows * COLUMN_SIZE_PX}px`;
+    board.style.width = `${columns * BLOCK_SIZE_PX}px`;
+    board.style.height = `${rows * BLOCK_SIZE_PX}px`;
     board.innerHTML = '';
 
-    // Clear the blocks array.
-    blocks.length = 0;
-    blocks.length = game.board.length;
-
     // Creates the board's grid.
+    blocks.length = game.board.length;
     for (let i = 0; i < blocks.length; ++i) {
         const block = document.createElement("div");
         block.classList.add("block");
@@ -145,10 +163,20 @@ function updateTimer() {
     timer.textContent = game.seconds.toString();
 }
 
+function parseIntInRange(name: string, min:number, max:number, s:string)
+        :number | null {
+    const int = parseInt(s);
+    if (min <= int && int <= max) {
+        return int;
+    }
+    alert(`${name} must be a number between ${min} and ${max}!`);
+    return null;
+}
+
 window.onload = () => {
     // Loads the game whenever the user clicks on the reset button.
     const resetButton = document.getElementById("reset")!;
-    resetButton.addEventListener("click", () => loadGame(10, 10, 10));
+    resetButton.addEventListener("click", loadGame);
 
-    loadGame(10, 10, 10);
+    loadGame();
 }
