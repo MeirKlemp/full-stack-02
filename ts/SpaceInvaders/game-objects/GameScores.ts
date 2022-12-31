@@ -7,18 +7,23 @@ import Transform from "../../Game/util/Trsansform.js";
 import Vector from "../../Game/util/Vector.js";
 import $ from "../../tools/fastAccess.js";
 
-const scoresLabel = "S C O R E"
 
 export default class GameScores extends GameObject{
     private _scores:number = 0
+    private _scoresTextBlock:TextBlock
+    private _titleTextBlock:TextBlock
+    private _scoresText:string
     
     constructor(game:Game,transform?:Transform){
         super(game,transform)
         const size = 40
+        this._scoresText = "S C O R E"
         const textBlock = new TextBlock("0",Color.WHITE,size,"ArcadeClassic")
+        this._scoresTextBlock = textBlock
         this.addComponent(textBlock)
         this.addComponent(new TextRenderer(textBlock,Vector.down.mult(size)))
-        const scoreTitleBlock = new TextBlock(scoresLabel,Color.WHITE,size,"ArcadeClassic")
+        const scoreTitleBlock = new TextBlock(this._scoresText,Color.WHITE,size,"ArcadeClassic")
+        this._titleTextBlock = scoreTitleBlock
         this.addComponent(scoreTitleBlock)
         this.addComponent(new TextRenderer(scoreTitleBlock))
 
@@ -32,13 +37,20 @@ export default class GameScores extends GameObject{
         this._scores = _scores
     }
 
+    public get title():string{
+        return this._scoresText
+    }
+
+    public set title(value:string){
+        this._scoresText = value
+    }
+
+
+
     public update(): void {
-        super.update();
-        
-        const text = this.getComponent(TextBlock);
-        if(text!=null){
-            text.text = this.format;
-        }
+        super.update();       
+        this._scoresTextBlock.text = this.format
+        this._titleTextBlock.text = this._scoresText
     }
 
     private get format():string{

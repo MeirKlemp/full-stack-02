@@ -12,11 +12,14 @@ export default class Game {
   private _drawer: Drawer;
   private _boundary: Vector;
   private static readonly fps = 60;
-  private static keyboardData:any = []
+  private static keyboardData: any = [];
   public static readonly deltaTime = 1 / Game.fps;
 
   constructor(drawer: Drawer, initFunction?: gameInit) {
-    this._gameObjects = new GameObjectGroup(this,new Transform(new Vector(1,1)));
+    this._gameObjects = new GameObjectGroup(
+      this,
+      new Transform(new Vector(1, 1))
+    );
     this._drawer = drawer;
     this._boundary = this._drawer.boundary;
     if (initFunction != null) {
@@ -29,7 +32,7 @@ export default class Game {
   }
 
   public start(): void {
-    this._gameObjects.start()
+    this._gameObjects.start();
   }
 
   public get drawer(): Drawer {
@@ -37,12 +40,12 @@ export default class Game {
   }
 
   public update(): void {
-    this._gameObjects.update()
+    this._gameObjects.update();
   }
 
-//   public onInput(input: string): void {
-//     this._gameObjects.onInput(input)
-//   }
+  //   public onInput(input: string): void {
+  //     this._gameObjects.onInput(input)
+  //   }
 
   public drawScreen(): void {
     const renderers: Renderer[] = this._gameObjects.getAllComponents(Renderer);
@@ -50,19 +53,19 @@ export default class Game {
   }
 
   public lateUpdate(): void {
-    this._gameObjects.lateUpdate()
+    this._gameObjects.lateUpdate();
   }
 
   public earlyUpdate(): void {
-    document.addEventListener("keydown",e=>{
-        e.preventDefault()
-        Game.keyboardData[e.code] = true
+    document.addEventListener("keydown", (e) => {
+      e.preventDefault();
+      Game.keyboardData[e.code] = true;
     });
-    document.addEventListener("keyup",e=>{
-        e.preventDefault()
-        Game.keyboardData[e.code] = false
+    document.addEventListener("keyup", (e) => {
+      e.preventDefault();
+      Game.keyboardData[e.code] = false;
     });
-    this._gameObjects.earlyUpdate()
+    this._gameObjects.earlyUpdate();
   }
 
   public destroy(id: string) {
@@ -99,7 +102,6 @@ export default class Game {
    * @returns all the game objects with the given type
    */
   public findGameObjectsByType<T>(gameObjectsType: Constructor<T>): T[] {
-
     return this._gameObjects.filter(
       (go) => go instanceof gameObjectsType
     ) as T[];
@@ -141,14 +143,20 @@ export default class Game {
     return JSON.parse(res);
   }
 
-  public static getInput(keyCode:string):boolean{
-    return Game.keyboardData[keyCode]
+  public static getInput(keyCode: string): boolean {
+    return Game.keyboardData[keyCode];
   }
 
   /**
    * the root game object
    */
-  public get rootGameObject():GameObjectGroup{
-    return this._gameObjects
+  public get rootGameObject(): GameObjectGroup {
+    return this._gameObjects;
+  }
+  /**
+   *restart the game
+   */
+  public restart() {
+    location.reload()
   }
 }

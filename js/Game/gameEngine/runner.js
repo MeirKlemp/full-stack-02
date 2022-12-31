@@ -12,6 +12,7 @@ var keys = {};
  */
 export default function runGame(containerId, initGame = (game) => { }, gameBoundary) {
     const container = $.id(containerId);
+    console.log(container);
     const canvas = document.createElement("canvas");
     canvas.innerHTML = "The Browser don't support HTML5. No wooden PC allowed for that game!";
     container.append(canvas);

@@ -26,4 +26,17 @@ export default  class ${
         return retPair.split('=')[1]
     }
 
+    /*
+ * Returns parameter's value from url if exists. Otherwise, returns `null`.
+ */
+public static param(param:string):string|null {
+    const paramsString = document.location.href.split('?')[1];
+    if (!paramsString) {
+        return null;
+    }
+
+    const params = new URLSearchParams(paramsString);
+    return params.get(param);
+}
+
 }

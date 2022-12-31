@@ -32,14 +32,8 @@ const sprites = [
 ];
 
 export default class EnemyGroup extends GameObjectGroup {
-    private _gameManager:GameManager
   constructor(game: Game) {
     super(game);
-    const gm = game.findGameObjectByType(GameManager)
-    if(!gm){
-        throw new Error(GAME_MANAGER_NOT_FOUND);
-    }
-    this._gameManager = gm
     this.transform.transfer(new Vector(20, 150));
     this.setEnemies();
   }
@@ -61,9 +55,13 @@ export default class EnemyGroup extends GameObjectGroup {
     const enemyTransform = new Transform(new Vector(50, 50), position);
     const enemyAnimation = new Animation("demoEnemy", 0.5, ...imagesPath);
     const enemy = new EnemyAlien(this._game, enemyAnimation, enemyTransform);
-    enemy.speed = 10;
+    enemy.speed = 20;
     enemy.scores = scores;
     this.addChild(enemy);
+  }
+
+  public get reaminingAliens():number{
+    return this.findChilds(EnemyAlien).length
   }
 
 

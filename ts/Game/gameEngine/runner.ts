@@ -16,6 +16,7 @@ var keys:any = {};
  */
 export default function runGame(containerId:string,initGame:gameInit = (game:Game)=>{},gameBoundary?:Vector):Game{
     const container = $.id(containerId) as HTMLDivElement
+    console.log(container)
     const canvas = document.createElement("canvas")
     
     canvas.innerHTML = "The Browser don't support HTML5. No wooden PC allowed for that game!"
@@ -40,7 +41,6 @@ function executeIntervals(game:Game){
 function runGameIntervals(game:Game):void{
     
     game.earlyUpdate()
-
     game.componentUpdate()
     checkCollision(getColliders(game))
     game.update()

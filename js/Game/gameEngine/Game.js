@@ -34,11 +34,11 @@ export default class Game {
         this._gameObjects.lateUpdate();
     }
     earlyUpdate() {
-        document.addEventListener("keydown", e => {
+        document.addEventListener("keydown", (e) => {
             e.preventDefault();
             Game.keyboardData[e.code] = true;
         });
-        document.addEventListener("keyup", e => {
+        document.addEventListener("keyup", (e) => {
             e.preventDefault();
             Game.keyboardData[e.code] = false;
         });
@@ -114,6 +114,12 @@ export default class Game {
      */
     get rootGameObject() {
         return this._gameObjects;
+    }
+    /**
+     *restart the game
+     */
+    restart() {
+        location.reload();
     }
 }
 Game.fps = 60;

@@ -26,7 +26,7 @@ export default class Bullet extends GameObject {
         if (!this._enemySource) {
             const player = new AudioPlayer();
             this.addComponent(player);
-            player.addClip("shot", "../../../audio/space-invaders/bullet1.wav");
+            player.addClip("shot", "../../../audio/space-invaders/shoot.wav");
             player.playClip("shot");
             player.loop = false;
         }

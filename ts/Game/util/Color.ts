@@ -21,7 +21,7 @@ export default class Color{
      * @returns color with the given presentation
      */
     public static rgb(r:number,g:number,b:number):Color{
-        return new Color(`rgb(${r}, ${g}, ${g})`)
+        return new Color(`rgb(${r}, ${g}, ${b})`)
     }
 
     /**

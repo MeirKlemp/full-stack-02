@@ -11,7 +11,7 @@ export default class Color {
      * @returns color with the given presentation
      */
     static rgb(r, g, b) {
-        return new Color(`rgb(${r}, ${g}, ${g})`);
+        return new Color(`rgb(${r}, ${g}, ${b})`);
     }
     /**
      * create color with rgba
