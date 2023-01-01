@@ -1,4 +1,5 @@
 import {Minesweeper, Modes, Block} from './game.js';
+import $ from '../tools/fastAccess.js';
 
 const BLOCK_SIZE_PX = 40;
 const BOMB_IMAGE_PATH = "/media/Minesweeper/bomb.png";
@@ -12,7 +13,7 @@ const LOSER_IMAGE_PATH = "/media/Minesweeper/dead.png";
 
 // The blocks of the HTML board.
 const blocks = new Array<HTMLElement>();
-let game = new Minesweeper(10, 10, 10);
+const game = new Minesweeper(10, 10, 10);
 // Handle to the interval that updates the seconds on the screen.
 let timerInterval:number | null = null;
 
@@ -165,17 +166,15 @@ function updateTimer() {
  * @return tuple containing rows, columns and bombs numbers.
  */
 function getGameProperties():[number, number, number] {
-    const difficulty = 
-        (<HTMLInputElement>document.getElementById("difficulty")!).value;
-    switch (difficulty.toLowerCase()) {
-    case "easy":
-        return [10, 10, 10];
+    const difficulty = ($.param("diff") ?? "").toLowerCase();
+    switch (difficulty) {
     case "medium":
         return [16, 16, 40];
     case "hard":
         return [16, 30, 99];
     default:
-        throw new Error("Unknown difficulty level...");
+    case "easy":
+        return [10, 10, 10];
     }
 }
 
@@ -209,12 +208,9 @@ function setStatusImage(path:string):void {
 
 
 window.onload = () => {
-    // Loads the game whenever the user clicks on the reset button, or changes
-    // difficulty.
+    // Loads the game whenever the user clicks on the reset button.
     const resetButton = document.getElementById("reset")!;
     resetButton.addEventListener("click", loadGame);
-    const difficultySelector = document.getElementById("difficulty")!;
-    difficultySelector.addEventListener("change", loadGame);
 
     // Set status clicking events.
     const board = document.getElementById("board")!;
