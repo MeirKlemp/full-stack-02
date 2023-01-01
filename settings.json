@@ -1,0 +1,7 @@
+{
+    "liveServer.settings.proxy": {
+        "enable": true,
+        "baseUri": "/api", 
+        "proxyUri": "https://fonts.cdnfonts.com/css/arcade-classic "
+    }
+}

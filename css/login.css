@@ -1,0 +1,48 @@
+
+* {
+    font-family: sans-serif;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    margin: auto;
+    background-color: wheat;
+}
+
+#forms-container {
+    display: flex;
+    padding: 15px;
+    justify-content: center;
+}
+
+#forms-container > form {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+}
+
+input {
+    padding: 3px;
+    margin: 5px;
+}
+
+.error {
+    color: red;
+    overflow-wrap: break-word;
+}
+
+.hidden {
+    display: none;
+}
+
+.separator {
+    border-left: 1px solid grey;
+    margin: 0 10px;
+}
