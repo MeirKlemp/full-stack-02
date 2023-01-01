@@ -27,6 +27,10 @@ body {
     max-width: 400px;
 }
 
+#reset {
+    cursor: pointer;
+}
+
 #status {
     max-width: 40px;
     max-height: 40px;

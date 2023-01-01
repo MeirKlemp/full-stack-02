@@ -7,6 +7,13 @@
 <body>
     <h2>Minesweeper</h2>
 
+    <!-- Difficulty Navigators -->
+    <div id="difficulty">
+        <a href="./minesweeper.html?diff=easy">Easy</a>
+        <a href="./minesweeper.html?diff=medium">Medium</a>
+        <a href="./minesweeper.html?diff=hard">Hard</a>
+    </div>
+
     <!-- Dashboard -->
     <div id="dashboard">
         <div class="metric">
@@ -14,14 +21,7 @@
             <span id="timer">timer</span>
         </div>
 
-        <div>
-            <select id="difficulty">
-                <option>Easy</option>
-                <option>Medium</option>
-                <option>Hard</option>
-            </select>
-            <button id="reset"><img id="status"></button>
-        </div>
+        <button id="reset"><img id="status"></button>
 
         <div class="metric">
             <img src="/media/Minesweeper/bomb.png">
