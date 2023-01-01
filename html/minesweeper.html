@@ -5,16 +5,30 @@
     <link rel="stylesheet" href="/css/minesweeper.css">
 </head>
 <body>
-    <label for="rows">rows:</label>
-    <input id="rows" type="number" value="10">
-    <label for="columns">columns:</label>
-    <input id="columns" type="number" value="10">
-    <label for="bombs">bombs:</label>
-    <input id="bombs" type="number" value="10">
-    <button id="reset">reset!</button>
+    <h2>Minesweeper</h2>
 
-    <span id="timer">timer</span>
-    <span id="bombsLeft">bombsLeft</span>
+    <!-- Dashboard -->
+    <div id="dashboard">
+        <div class="metric">
+            <img src="/media/Minesweeper/timer.png">
+            <span id="timer">timer</span>
+        </div>
+
+        <div>
+            <select id="difficulty">
+                <option>Easy</option>
+                <option>Medium</option>
+                <option>Hard</option>
+            </select>
+            <button id="reset"><img id="status"></button>
+        </div>
+
+        <div class="metric">
+            <img src="/media/Minesweeper/bomb.png">
+            <span id="bombsLeft">bombsLeft</span>
+        </div>
+    </div>
+
     <div id="board"></div>
 
     <script type="module" src="/js/Minesweeper/ui.js"></script>

@@ -2,12 +2,11 @@ import { Minesweeper, Modes } from './game.js';
 const BLOCK_SIZE_PX = 40;
 const BOMB_IMAGE_PATH = "/media/Minesweeper/bomb.png";
 const NO_BOMB_IMAGE_PATH = "/media/Minesweeper/no-bomb.png";
-const MIN_ROWS = 1;
-const MAX_ROWS = 100;
-const MIN_COLUMNS = 1;
-const MAX_COLUMNS = 100;
-const MIN_BOMBS = 1;
-const MAX_BOMBS = 2500;
+// Status images' pathes.
+const PLAYING_IMAGE_PATH = "/media/Minesweeper/happy.png";
+const CLICKING_IMAGE_PATH = "/media/Minesweeper/surprised.png";
+const WINNER_IMAGE_PATH = "/media/Minesweeper/cool.png";
+const LOSER_IMAGE_PATH = "/media/Minesweeper/dead.png";
 // The blocks of the HTML board.
 const blocks = new Array();
 let game = new Minesweeper(10, 10, 10);
@@ -17,27 +16,25 @@ let timerInterval = null;
  * Restarts the minesweeper game and creates the UI board content.
  */
 function loadGame() {
-    // Extract rows, columns and bombs from the input fields.
-    const rows = parseIntInRange("Rows", MIN_ROWS, MAX_ROWS, document.getElementById("rows").value);
-    const columns = parseIntInRange("Columns", MIN_COLUMNS, MAX_COLUMNS, document.getElementById("columns").value);
-    const bombs = parseIntInRange("Bombs", MIN_BOMBS, MAX_BOMBS, document.getElementById("bombs").value);
-    if (rows === null || columns === null || bombs === null) {
-        return;
-    }
+    setStatusImage(PLAYING_IMAGE_PATH);
+    const [rows, columns, bombs] = getGameProperties();
     game.reset(rows, columns, bombs);
     // Resets the board's content and size.
+    const styleWidth = columns * BLOCK_SIZE_PX + "px";
     const board = document.getElementById("board");
     board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-    board.style.width = `${columns * BLOCK_SIZE_PX}px`;
+    board.style.width = styleWidth;
     board.style.height = `${rows * BLOCK_SIZE_PX}px`;
     board.innerHTML = '';
+    const dashboard = document.getElementById("dashboard");
+    dashboard.style.maxWidth = styleWidth;
     // Creates the board's grid.
     blocks.length = game.board.length;
     for (let i = 0; i < blocks.length; ++i) {
         const block = document.createElement("div");
         block.classList.add("block");
         block.classList.add("block-hidden");
-        block.addEventListener("mouseup", blockClicked);
+        block.addEventListener("mouseup", blockMouseUp);
         block.oncontextmenu = () => false;
         blocks[i] = block;
         board.appendChild(block);
@@ -52,7 +49,7 @@ function loadGame() {
     const bombsLeft = document.getElementById("bombsLeft");
     bombsLeft.textContent = game.bombsLeft.toString();
 }
-function blockClicked(ev) {
+function blockMouseUp(ev) {
     const idx = blocks.indexOf(this);
     if (ev.button === 2) {
         // On right click put or remvoe flag.
@@ -66,6 +63,7 @@ function blockClicked(ev) {
         bombsLeft.textContent = game.bombsLeft.toString();
         return;
     }
+    setStatusImage(PLAYING_IMAGE_PATH);
     // On left click play the current block.
     let visibleBlocks = game.play(idx);
     // Make all new visible blocks visible.
@@ -75,7 +73,7 @@ function blockClicked(ev) {
     if (game.gameOver) {
         // Make board unclickable.
         for (const block of blocks) {
-            block.removeEventListener("mouseup", blockClicked);
+            block.removeEventListener("mouseup", blockMouseUp);
             block.style.cursor = "auto";
         }
         // Stop timer.
@@ -85,7 +83,7 @@ function blockClicked(ev) {
             timerInterval = null;
         }
         if (game.won) {
-            alert(`You won in ${game.seconds} seconds!`);
+            setStatusImage(WINNER_IMAGE_PATH);
         }
         else {
             // Show all not flagged bombs and all missed flags.
@@ -98,7 +96,7 @@ function blockClicked(ev) {
                     makeBlockVisible(blocks[i], block);
                 }
             }
-            alert("Booom! Game Over!");
+            setStatusImage(LOSER_IMAGE_PATH);
         }
     }
 }
@@ -111,7 +109,7 @@ function makeBlockVisible(block, gameBlock) {
     block.classList.add("block-visible");
     block.classList.remove("block-hidden");
     block.classList.remove("block-flagged");
-    block.removeEventListener("click", blockClicked);
+    block.removeEventListener("mouseup", blockMouseUp);
     if (gameBlock.isBomb) {
         // Show bomb image if the block has a bomb.
         const content = document.createElement("img");
@@ -140,30 +138,60 @@ function makeBlockVisible(block, gameBlock) {
  */
 function updateTimer() {
     const timer = document.getElementById("timer");
-    timer.textContent = game.seconds.toString();
+    timer.textContent = Math.min(game.seconds, 99999).toString();
 }
 /**
- * Parses an integer within a specific range from a string. If the string is
- * not a number, or not in the range, the function will alert the user with
- * a property name.
- *
- * @param name  the property name to show the user on error.
- * @param min   the minimum value of the integer's range.
- * @param max   the maximum value of the integer's range.
- * @param s     the string to parse.
- * @return the parsed integer if in range, or `null` otherwise.
+ * Retrives the number of rows, columns and bombs from the difficulty level.
+ * @return tuple containing rows, columns and bombs numbers.
  */
-function parseIntInRange(name, min, max, s) {
-    const int = parseInt(s);
-    if (min <= int && int <= max) {
-        return int;
+function getGameProperties() {
+    const difficulty = document.getElementById("difficulty").value;
+    switch (difficulty.toLowerCase()) {
+        case "easy":
+            return [10, 10, 10];
+        case "medium":
+            return [16, 16, 40];
+        case "hard":
+            return [16, 30, 99];
+        default:
+            throw new Error("Unknown difficulty level...");
     }
-    alert(`${name} must be a number between ${min} and ${max}!`);
-    return null;
+}
+/**
+ * Mouse down event that changes the status to clicking on left click.
+ */
+function clickingStatusMouseDown(ev) {
+    if (ev.button !== 2 && !game.gameOver) {
+        setStatusImage(CLICKING_IMAGE_PATH);
+    }
+}
+/**
+ * Mouse up event that sets the status back to normal when done left clicking.
+ */
+function clickingStatusMouseUp(ev) {
+    // Set status back to normal when done clicking.
+    if (ev.button !== 2 && !game.gameOver) {
+        setStatusImage(PLAYING_IMAGE_PATH);
+    }
+}
+/**
+ * Sets the status image according to the given image.
+ * @param path path to a new image to be the new status.
+ */
+function setStatusImage(path) {
+    const stat = document.getElementById("status");
+    stat.src = path;
 }
 window.onload = () => {
-    // Loads the game whenever the user clicks on the reset button.
+    // Loads the game whenever the user clicks on the reset button, or changes
+    // difficulty.
     const resetButton = document.getElementById("reset");
     resetButton.addEventListener("click", loadGame);
+    const difficultySelector = document.getElementById("difficulty");
+    difficultySelector.addEventListener("change", loadGame);
+    // Set status clicking events.
+    const board = document.getElementById("board");
+    board.addEventListener("mousedown", clickingStatusMouseDown);
+    document.body.addEventListener("mouseup", clickingStatusMouseUp);
     loadGame();
 };
