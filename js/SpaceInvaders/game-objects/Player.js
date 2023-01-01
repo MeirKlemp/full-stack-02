@@ -1,4 +1,4 @@
-import { GAME_MANAGER_NOT_FOUND, PLAYER_LIVES_NOT_FOUND } from "../../errors.js";
+import { GAME_MANAGER_NOT_FOUND, PLAYER_LIVES_NOT_FOUND, } from "../../errors.js";
 import AudioPlayer from "../../Game/components/audio/AudioPlayer.js";
 import BoxCollider from "../../Game/components/colliders/BoxCollider.js";
 import KillTimer from "../../Game/components/KillTimer.js";
@@ -52,11 +52,17 @@ export default class Player extends GameObject {
         this.transform.transfer(movement);
     }
     shooter() {
-        if (Game.getInput("Space") && this._reloadTime <= 0) {
-            const bulletPosition = this.transform.position.add(Vector.up.mult(20)).add(Vector.right.mult(this.transform.scale.x / 2));
-            const bullet = new Bullet(this.game, bulletPosition, false, 5);
-            this.game.addGameObject(bullet);
-            this._reloadTime = this._shootDelay;
+        if (Game.getInput("Space")) {
+            const isBullet = this.game.findGameObjectsByType(Bullet).filter((b) => !b.enemyBullet)
+                .length > 0;
+            if (!isBullet) {
+                const bulletPosition = this.transform.position
+                    .add(Vector.up.mult(20))
+                    .add(Vector.right.mult(this.transform.scale.x / 2));
+                const bullet = new Bullet(this.game, bulletPosition, false, 5);
+                this.game.addGameObject(bullet);
+                this._reloadTime = this._shootDelay;
+            }
         }
     }
 }

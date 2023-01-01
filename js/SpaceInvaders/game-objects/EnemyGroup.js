@@ -3,6 +3,8 @@ import Transform from "../../Game/util/Trsansform.js";
 import Vector from "../../Game/util/Vector.js";
 import Animation from "../../Game/components/visual/Animation.js";
 import EnemyAlien from "./EnemyAlien.js";
+import GameManager from "./GameManager.js";
+import { GAME_MANAGER_NOT_FOUND } from "../../errors.js";
 //set up the sprites for the enemies
 const sprites = [
     [
@@ -44,11 +46,21 @@ export default class EnemyGroup extends GameObjectGroup {
         const enemyTransform = new Transform(new Vector(50, 50), position);
         const enemyAnimation = new Animation("demoEnemy", 0.5, ...imagesPath);
         const enemy = new EnemyAlien(this._game, enemyAnimation, enemyTransform);
-        enemy.speed = 20;
+        //enemy.speed = 10;
         enemy.scores = scores;
         this.addChild(enemy);
     }
     get reaminingAliens() {
         return this.findChilds(EnemyAlien).length;
+    }
+    update() {
+        super.update();
+        if (this.childs.length == 0) {
+            const manager = this.game.findGameObjectByType(GameManager);
+            if (!manager) {
+                throw new Error(GAME_MANAGER_NOT_FOUND);
+            }
+            manager.gameOver(true);
+        }
     }
 }

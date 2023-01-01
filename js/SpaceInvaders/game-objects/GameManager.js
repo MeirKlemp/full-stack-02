@@ -1,7 +1,7 @@
 import GameObject from "../../Game/GameObject.js";
 import Game from "../../Game/gameEngine/Game.js";
 import GameScores from "./GameScores.js";
-import { BAD_CREDENTIALS, GAME_SCORES_NOT_FOUND } from "../../errors.js";
+import { BAD_CREDENTIALS, GAME_SCORES_NOT_FOUND, } from "../../errors.js";
 import $ from "../../tools/fastAccess.js";
 import Player from "./Player.js";
 import ScoresState from "../ScoresState.js";
@@ -23,7 +23,9 @@ export default class GameManager extends GameObject {
         this._canPlayerShoot = true;
         this._respawnTimer = 0;
         this._playerDead = false;
-        this.bonusProbability = 0.000001;
+        this._bonusRemainingTime = 0;
+        this.bonusProbability = 0.0005;
+        this.bonusCooldown = 4;
         this.difficulty = difficulty;
     }
     lateUpdate() {
@@ -36,9 +38,11 @@ export default class GameManager extends GameObject {
                 this._playerDead = false;
             }
         }
+        this._bonusRemainingTime -= Game.deltaTime;
         //add bonus spaceship sometimes
-        if (Math.random() < this.bonusProbability) {
+        if (Math.random() < this.bonusProbability && this._bonusRemainingTime <= 0) {
             this.game.addGameObject(new BonusSpaceship(this.game));
+            this._bonusRemainingTime = this.bonusCooldown;
         }
     }
     /**
@@ -101,17 +105,19 @@ export default class GameManager extends GameObject {
         if (!score) {
             throw new Error(GAME_SCORES_NOT_FOUND);
         }
-        const userKey = $.cookie('user');
+        let userKey = $.session("currentUsername");
         if (!userKey) {
             throw new Error(BAD_CREDENTIALS);
         }
+        userKey = `${userKey}_si`;
         const data = this.game.loadState(userKey);
         const state = ScoresState.load(data);
         const diffScore = state[this.difficulty];
         diffScore.lastScores = score.scores;
         diffScore.bestScores = Math.max(diffScore.bestScores, score.scores);
         this.game.saveState(userKey, state);
-        this.game.restart();
+        const p = new Promise((res, rej) => res());
+        p.then(() => $.cookie = `win=${isWin}`).then(() => this.game.restart());
     }
     /**
      * can the player shoot now

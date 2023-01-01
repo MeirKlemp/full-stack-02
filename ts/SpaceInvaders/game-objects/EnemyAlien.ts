@@ -21,15 +21,15 @@ import AudioPlayer from "../../Game/components/audio/AudioPlayer.js";
 
 export default class EnemyAlien extends GameObject {
   private _scores: number = 0;
-  private _initialSpeed: number = 0;
+  private _initialSpeed: number = 10;
   private _gameManager: GameManager;
   private readonly _accelleration: number = 5;
   private readonly _shootProbability = 0.00001;
   private readonly _baseEnemiesModifier = 57;
   private readonly _gameOverHeight = 100;
   private readonly _difficultyDiff = {
-    easy:1,
-    medium:1.5,
+    easy:0.5,
+    medium:1,
     hard:2,
     impossible:100
   }

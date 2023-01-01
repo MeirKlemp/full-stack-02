@@ -55,7 +55,7 @@ export default class EnemyGroup extends GameObjectGroup {
     const enemyTransform = new Transform(new Vector(50, 50), position);
     const enemyAnimation = new Animation("demoEnemy", 0.5, ...imagesPath);
     const enemy = new EnemyAlien(this._game, enemyAnimation, enemyTransform);
-    enemy.speed = 20;
+    //enemy.speed = 10;
     enemy.scores = scores;
     this.addChild(enemy);
   }
@@ -64,5 +64,15 @@ export default class EnemyGroup extends GameObjectGroup {
     return this.findChilds(EnemyAlien).length
   }
 
+  public update(): void {
+    super.update()
+    if(this.childs.length==0){
+      const manager =  this.game.findGameObjectByType(GameManager)
+      if(!manager){
+        throw new Error(GAME_MANAGER_NOT_FOUND)
+      }
+      manager.gameOver(true)
+    }
+  }
 
 }

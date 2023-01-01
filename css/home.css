@@ -1,0 +1,28 @@
+body{
+    background-color: rgb(39, 60, 122);
+}
+
+figure{
+    background-color: rgb(52, 52, 147);
+    color: rgb(149, 135, 85);
+    font-size: x-large;
+    text-align: center;
+}
+
+.title{
+    text-align: center;
+    color: antiquewhite;
+}
+
+.navbar{
+    background-color: rgb(18, 35, 87);
+
+}
+
+.navbar-brand{
+    color: antiquewhite;
+}
+
+.navbar-brand:hover{
+    color: rgb(213, 180, 137);
+}

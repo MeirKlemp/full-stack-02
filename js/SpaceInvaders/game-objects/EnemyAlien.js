@@ -19,14 +19,14 @@ export default class EnemyAlien extends GameObject {
     constructor(game, animation, transform) {
         super(game, transform);
         this._scores = 0;
-        this._initialSpeed = 0;
+        this._initialSpeed = 10;
         this._accelleration = 5;
         this._shootProbability = 0.00001;
         this._baseEnemiesModifier = 57;
         this._gameOverHeight = 100;
         this._difficultyDiff = {
-            easy: 1,
-            medium: 1.5,
+            easy: 0.5,
+            medium: 1,
             hard: 2,
             impossible: 100
         };

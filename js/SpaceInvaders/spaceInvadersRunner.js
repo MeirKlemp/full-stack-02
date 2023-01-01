@@ -23,10 +23,11 @@ const difficulty = diffParam;
 runGame(CONTAINER_ID, initGame, new Vector(800, 720));
 function initGame(game) {
     setGameManager(game);
-    const username = $.cookie("user");
+    let username = $.session("currentUsername");
     if (!username) {
         throw new Error(BAD_CREDENTIALS);
     }
+    username = `${username}_si`;
     const localDataSave = game.loadState(username);
     const scoresState = ScoresState.load(localDataSave);
     const scoresData = scoresState[difficulty];
@@ -39,8 +40,13 @@ function initGame(game) {
 }
 function setScores(game, scoresData) {
     const scoresTransform = new Transform(Vector.zero, new Vector(20, 40), Vector.zero);
+    const isWin = $.getCookie("win");
     const scores = new GameScores(game, scoresTransform);
     scores.scores = 0;
+    if (isWin != null && (isWin == 'true')) {
+        scores.scores = scoresData.lastScores;
+        $.cookie = 'win=false';
+    }
     game.addGameObject(scores);
     const bestScoresTransform = new Transform(Vector.zero, new Vector(300, 40));
     const bestScores = new GameScores(game, bestScoresTransform);
