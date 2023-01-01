@@ -18,6 +18,40 @@ body {
     box-sizing: border-box;
 }
 
+#dashboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    padding: 5px 0;
+    max-width: 400px;
+}
+
+#status {
+    max-width: 40px;
+    max-height: 40px;
+}
+
+.metric {
+    display: inline-flex;
+    align-items: center;
+    font-size: 25px;
+    background: #e3e3e3;
+    border-radius: 5px;
+    padding: 5px;
+    width: 100px;
+}
+
+.metric span {
+    flex: 1;
+    text-align: center;
+}
+
+.metric img {
+    max-width: 1.2em;
+    max-height: 1.2em;
+}
+
 .block {
     display: flex;
     justify-content: center;
