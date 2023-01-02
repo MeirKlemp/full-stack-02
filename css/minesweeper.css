@@ -60,7 +60,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: solid 1px red;
+    border: solid 1px darkgrey;
     width: 40px;
     height: 40px;
     transition: all 500ms;
@@ -75,7 +75,7 @@ body {
 }
 
 .block-visible {
-    background-color: wheat;
+    background-color: lightgrey;
 }
 
 .block-hidden {
@@ -95,6 +95,34 @@ body {
     background-color: grey;
     background-origin: content-box;
     padding: 3px;
+}
+
+.block-num {
+    font-weight: bold;
+}
+.block-num-1 {
+    color: blue;
+}
+.block-num-2 {
+    color: green;
+}
+.block-num-3 {
+    color: red;
+}
+.block-num-4 {
+    color: purple;
+}
+.block-num-5 {
+    color: maroon;
+}
+.block-num-6 {
+    color: turquoise;
+}
+.block-num-7 {
+    color: black;
+}
+.block-num-8 {
+    color: gray;
 }
 
 .bomb-clicked {

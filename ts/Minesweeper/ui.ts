@@ -149,6 +149,8 @@ function makeBlockVisible(block:HTMLElement, gameBlock:Block):void {
         // Show near bombs number if block nearby bombs.
         const content = document.createElement("p")
         content.textContent = gameBlock.nearBombs.toString();
+        content.classList.add("block-num-" + gameBlock.nearBombs);
+        content.classList.add("block-num");
         block.appendChild(content);
     }
 }
