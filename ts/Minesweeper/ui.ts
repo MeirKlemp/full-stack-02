@@ -2,14 +2,14 @@ import {Minesweeper, Modes, Block} from './game.js';
 import $ from '../tools/fastAccess.js';
 
 const BLOCK_SIZE_PX = 40;
-const BOMB_IMAGE_PATH = "/media/Minesweeper/bomb.png";
-const NO_BOMB_IMAGE_PATH = "/media/Minesweeper/no-bomb.png";
+const BOMB_IMAGE_PATH = "/images/Minesweeper/bomb.png";
+const NO_BOMB_IMAGE_PATH = "/images/Minesweeper/no-bomb.png";
 
 // Status images' pathes.
-const PLAYING_IMAGE_PATH = "/media/Minesweeper/happy.png";
-const CLICKING_IMAGE_PATH = "/media/Minesweeper/surprised.png";
-const WINNER_IMAGE_PATH = "/media/Minesweeper/cool.png";
-const LOSER_IMAGE_PATH = "/media/Minesweeper/dead.png";
+const PLAYING_IMAGE_PATH = "/images/Minesweeper/happy.png";
+const CLICKING_IMAGE_PATH = "/images/Minesweeper/surprised.png";
+const WINNER_IMAGE_PATH = "/images/Minesweeper/cool.png";
+const LOSER_IMAGE_PATH = "/images/Minesweeper/dead.png";
 
 // The blocks of the HTML board.
 const blocks = new Array<HTMLElement>();

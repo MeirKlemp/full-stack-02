@@ -88,7 +88,7 @@ body {
 }
 
 .block-flagged {
-    background: url("/media/Minesweeper/red-flag.png");
+    background: url("/images/Minesweeper/red-flag.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
