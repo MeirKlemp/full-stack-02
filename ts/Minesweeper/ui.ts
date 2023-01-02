@@ -17,6 +17,11 @@ const game = new Minesweeper(10, 10, 10);
 // Handle to the interval that updates the seconds on the screen.
 let timerInterval:number | null = null;
 
+// Game's audios.
+const clickAudio = new Audio("/audio/Minesweeper/click.mp3");
+const bombAudio = new Audio("/audio/Minesweeper/bomb.mp3");
+const winAudio = new Audio("/audio/Minesweeper/win.mp3");
+
 /**
  * Restarts the minesweeper game and creates the UI board content.
  */
@@ -82,6 +87,10 @@ function blockMouseUp(this:HTMLElement, ev:any):void {
     // On left click play the current block.
     let visibleBlocks = game.play(idx);
 
+    if (visibleBlocks.length >= 1) {
+        clickAudio.play();
+    }
+
     // Make all new visible blocks visible.
     for (let i of visibleBlocks) {
         makeBlockVisible(blocks[i], game.board[i]);
@@ -103,6 +112,7 @@ function blockMouseUp(this:HTMLElement, ev:any):void {
 
         if (game.won) {
             setStatusImage(WINNER_IMAGE_PATH);
+            winAudio.play();
         } else {
             // Show all not flagged bombs and all missed flags.
             for (let i = 0; i < blocks.length; ++i) {
@@ -115,6 +125,7 @@ function blockMouseUp(this:HTMLElement, ev:any):void {
             }
 
             setStatusImage(LOSER_IMAGE_PATH);
+            bombAudio.play();
         }
     }
 }
