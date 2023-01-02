@@ -8,6 +8,7 @@ const games = [
     gameName: "mine sweeper",
     src: "mine sweeper.jfif",
     available: true,
+    link: "minesweeper.html",
   },
   {
     gameName: "space invaders",
