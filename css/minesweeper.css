@@ -31,9 +31,26 @@ body {
     cursor: pointer;
 }
 
+#status.status-normal {
+    background-image: url("/images/Minesweeper/happy.png");
+}
+#status.status-clicking {
+    background-image: url("/images/Minesweeper/surprised.png");
+}
+#status.status-winner {
+    background-image: url("/images/Minesweeper/cool.png");
+}
+#status.status-loser {
+    background-image: url("/images/Minesweeper/dead.png");
+}
 #status {
-    max-width: 40px;
-    max-height: 40px;
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-origin: content-box;
+    padding: 3px;
 }
 
 .metric {
@@ -87,17 +104,41 @@ body {
     display: none;
 }
 
-.block-flagged {
-    background: url("/images/Minesweeper/red-flag.png");
+/* Common properties for blocks with a background image. */
+.block-flagged,
+.block-without-bomb,
+.block-with-bomb {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    background-color: grey;
     background-origin: content-box;
     padding: 3px;
 }
 
-.block-num {
+.block-flagged {
+    background-image: url("/images/Minesweeper/red-flag.png");
+}
+
+.block-without-bomb {
+    background-image: url("/images/Minesweeper/no-bomb.png");
+}
+
+.block-with-bomb {
+    background-image: url("/images/Minesweeper/bomb.png");
+}
+.block-with-bomb.block-with-bomb-clicked {
+    background-color: red;
+}
+
+.block-num-1,
+.block-num-2,
+.block-num-3,
+.block-num-4,
+.block-num-5,
+.block-num-6,
+.block-num-7,
+.block-num-8,
+.block-num-9 {
     font-weight: bold;
 }
 .block-num-1 {
@@ -125,6 +166,3 @@ body {
     color: gray;
 }
 
-.bomb-clicked {
-    background-color: red;
-}

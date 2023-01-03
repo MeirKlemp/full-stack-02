@@ -1,27 +1,33 @@
 import { Minesweeper, Modes } from './game.js';
 import $ from '../tools/fastAccess.js';
+// Width and height of a UI block.
 const BLOCK_SIZE_PX = 40;
-const BOMB_IMAGE_PATH = "/images/Minesweeper/bomb.png";
-const NO_BOMB_IMAGE_PATH = "/images/Minesweeper/no-bomb.png";
-// Status images' pathes.
-const PLAYING_IMAGE_PATH = "/images/Minesweeper/happy.png";
-const CLICKING_IMAGE_PATH = "/images/Minesweeper/surprised.png";
-const WINNER_IMAGE_PATH = "/images/Minesweeper/cool.png";
-const LOSER_IMAGE_PATH = "/images/Minesweeper/dead.png";
 // The blocks of the HTML board.
 const blocks = new Array();
 const game = new Minesweeper(10, 10, 10);
 // Handle to the interval that updates the seconds on the screen.
 let timerInterval = null;
-// Game's audios.
+// Audio of clicking on a block.
 const clickAudio = new Audio("/audio/Minesweeper/click.mp3");
+// Audio of clicking on a bomb.
 const bombAudio = new Audio("/audio/Minesweeper/bomb.mp3");
+// Audio of winning the game.
 const winAudio = new Audio("/audio/Minesweeper/win.mp3");
+/**
+ * The status classes of the status image.
+ */
+var Status;
+(function (Status) {
+    Status["NORMAL"] = "status-normal";
+    Status["CLICKING"] = "status-clicking";
+    Status["WINNER"] = "status-winner";
+    Status["LOSER"] = "status-loser";
+})(Status || (Status = {}));
 /**
  * Restarts the minesweeper game and creates the UI board content.
  */
 function loadGame() {
-    setStatusImage(PLAYING_IMAGE_PATH);
+    setStatus(Status.NORMAL);
     const [rows, columns, bombs] = getGameProperties();
     game.reset(rows, columns, bombs);
     // Resets the board's content and size.
@@ -68,7 +74,7 @@ function blockMouseUp(ev) {
         bombsLeft.textContent = game.bombsLeft.toString();
         return;
     }
-    setStatusImage(PLAYING_IMAGE_PATH);
+    setStatus(Status.NORMAL);
     // On left click play the current block.
     let visibleBlocks = game.play(idx);
     if (visibleBlocks.length >= 1) {
@@ -91,7 +97,7 @@ function blockMouseUp(ev) {
             timerInterval = null;
         }
         if (game.won) {
-            setStatusImage(WINNER_IMAGE_PATH);
+            setStatus(Status.WINNER);
             winAudio.play();
         }
         else {
@@ -105,7 +111,7 @@ function blockMouseUp(ev) {
                     makeBlockVisible(blocks[i], block);
                 }
             }
-            setStatusImage(LOSER_IMAGE_PATH);
+            setStatus(Status.LOSER);
             bombAudio.play();
         }
     }
@@ -122,26 +128,21 @@ function makeBlockVisible(block, gameBlock) {
     block.removeEventListener("mouseup", blockMouseUp);
     if (gameBlock.isBomb) {
         // Show bomb image if the block has a bomb.
-        const content = document.createElement("img");
-        content.src = BOMB_IMAGE_PATH;
-        block.appendChild(content);
+        block.classList.add("block-with-bomb");
         // Show different style for the clicked block that had the bomb.
         if (gameBlock.mode === Modes.VISIBLE) {
-            block.classList.add("bomb-clicked");
+            block.classList.add("block-with-bomb-clicked");
         }
     }
     else if (gameBlock.mode === Modes.FLAGGED) {
         // Show no-bomb image if the block doesn't have a bomb but is flagged.
-        const content = document.createElement("img");
-        content.src = NO_BOMB_IMAGE_PATH;
-        block.appendChild(content);
+        block.classList.add("block-without-bomb");
     }
     else if (gameBlock.nearBombs !== 0) {
         // Show near bombs number if block nearby bombs.
         const content = document.createElement("p");
         content.textContent = gameBlock.nearBombs.toString();
         content.classList.add("block-num-" + gameBlock.nearBombs);
-        content.classList.add("block-num");
         block.appendChild(content);
     }
 }
@@ -174,7 +175,7 @@ function getGameProperties() {
  */
 function clickingStatusMouseDown(ev) {
     if (ev.button !== 2 && !game.gameOver) {
-        setStatusImage(CLICKING_IMAGE_PATH);
+        setStatus(Status.CLICKING);
     }
 }
 /**
@@ -183,16 +184,19 @@ function clickingStatusMouseDown(ev) {
 function clickingStatusMouseUp(ev) {
     // Set status back to normal when done clicking.
     if (ev.button !== 2 && !game.gameOver) {
-        setStatusImage(PLAYING_IMAGE_PATH);
+        setStatus(Status.NORMAL);
     }
 }
 /**
- * Sets the status image according to the given image.
- * @param path path to a new image to be the new status.
+ * Sets the status image according to the given status.
  */
-function setStatusImage(path) {
-    const stat = document.getElementById("status");
-    stat.src = path;
+function setStatus(stat) {
+    const statusImage = document.getElementById("status");
+    // Remove all other status classes.
+    for (const s of Object.values(Status)) {
+        statusImage.classList.remove(s);
+    }
+    statusImage.classList.add(stat);
 }
 window.onload = () => {
     // Loads the game whenever the user clicks on the reset button.
