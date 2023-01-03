@@ -1,5 +1,6 @@
-import { Minesweeper, Modes } from './game.js';
-import $ from '../tools/fastAccess.js';
+import { Minesweeper, Modes } from "./game.js";
+import $ from "../tools/fastAccess.js";
+import ScoresState from "./ScoresState.js";
 // Width and height of a UI block.
 const BLOCK_SIZE_PX = 40;
 // The blocks of the HTML board.
@@ -34,9 +35,9 @@ function loadGame() {
     const styleWidth = columns * BLOCK_SIZE_PX + "px";
     const board = document.getElementById("board");
     board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-    board.style.width = styleWidth;
+    $.id("game-space").style.width = styleWidth;
     board.style.height = `${rows * BLOCK_SIZE_PX}px`;
-    board.innerHTML = '';
+    board.innerHTML = "";
     const dashboard = document.getElementById("dashboard");
     dashboard.style.maxWidth = styleWidth;
     // Creates the board's grid.
@@ -59,8 +60,11 @@ function loadGame() {
     // Resets the bombs left counter.
     const bombsLeft = document.getElementById("bombsLeft");
     bombsLeft.textContent = game.bombsLeft.toString();
+    //set the high scores table
+    setHighScoresTable();
 }
 function blockMouseUp(ev) {
+    var _a;
     const idx = blocks.indexOf(this);
     if (ev.button === 2) {
         // On right click put or remvoe flag.
@@ -99,6 +103,15 @@ function blockMouseUp(ev) {
         if (game.won) {
             setStatus(Status.WINNER);
             winAudio.play();
+            //calculate the new high scores
+            const username = $.session("currentUsername");
+            const diff = ((_a = $.param("diff")) !== null && _a !== void 0 ? _a : "easy");
+            const state = ScoresState.load($.loadLocale(`${username}_ms`));
+            const highScores = state[diff];
+            if (highScores.bestScores == 0 || game.seconds < highScores.bestScores) {
+                highScores.bestScores = game.seconds;
+            }
+            $.saveLocale(`${username}_ms`, state);
         }
         else {
             // Show all not flagged bombs and all missed flags.
@@ -106,8 +119,8 @@ function blockMouseUp(ev) {
                 if (i === idx)
                     continue;
                 const block = game.board[i];
-                if (block.isBomb && block.mode !== Modes.FLAGGED ||
-                    !block.isBomb && block.mode === Modes.FLAGGED) {
+                if ((block.isBomb && block.mode !== Modes.FLAGGED) ||
+                    (!block.isBomb && block.mode === Modes.FLAGGED)) {
                     makeBlockVisible(blocks[i], block);
                 }
             }
@@ -208,3 +221,38 @@ window.onload = () => {
     document.body.addEventListener("mouseup", clickingStatusMouseUp);
     loadGame();
 };
+function setHighScoresTable() {
+    var _a;
+    const difficulty = ((_a = $.param("diff")) !== null && _a !== void 0 ? _a : "easy");
+    const users = $.loadLocale("users");
+    let usersScores = users.map((u) => {
+        const user = u.username;
+        const scoresStr = $.loadLocale(`${user}_ms`);
+        return { socres: ScoresState.load(scoresStr)[difficulty], userName: user };
+    }).filter(c => c.socres.bestScores != 0);
+    usersScores = usersScores.sort((a, b) => a.socres.bestScores - b.socres.bestScores);
+    //set up the ui
+    const container = $.id("highscores-container");
+    //set up the title
+    const titleColumn = $.ui.col;
+    titleColumn.innerHTML = "<h2>high scores</h2>";
+    container.innerHTML = "";
+    container.appendChild($.ui.row($.ui.col, titleColumn, $.ui.col));
+    for (let i = 0; i < usersScores.length; i++) {
+        addScoreElement(i + 1, usersScores[i].userName, usersScores[i].socres, container);
+    }
+}
+function addScoreElement(place, name, score, father) {
+    console.log(place, name, score.bestScores, father);
+    //set the place column
+    const placeCol = $.ui.col;
+    placeCol.innerHTML = `#${place}`;
+    //set the user name column
+    const nameCol = $.ui.col;
+    nameCol.innerHTML = name;
+    //set the scores column
+    const scoreCol = $.ui.col;
+    scoreCol.innerHTML = `${score.bestScores}`;
+    //put all in the father
+    father.appendChild($.ui.row(placeCol, nameCol, scoreCol));
+}

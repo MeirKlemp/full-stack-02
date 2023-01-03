@@ -1,3 +1,7 @@
+body{
+    background-color: rgb(51, 95, 170);
+}
+
 .navbar{
     background-color: rgb(18, 35, 87);
 
@@ -9,4 +13,14 @@
 
 .navbar-brand:hover{
     color: rgb(213, 180, 137);
+}
+
+.diff-button{
+    color: aliceblue;
+    margin: 8px 0;
+    border: none;
+    font-size: xx-large;
+    width: 100%;
+    opacity: 0.9;
+    text-decoration: none;
 }

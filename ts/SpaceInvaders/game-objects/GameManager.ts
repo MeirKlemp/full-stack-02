@@ -25,11 +25,10 @@ export default class GameManager extends GameObject {
   private _canPlayerShoot: boolean = true;
   private _respawnTimer: number = 0;
   private _playerDead: boolean = false;
-  private _bonusRemainingTime:number = 0
+  private _bonusRemainingTime: number = 0;
   public readonly difficulty: GameDifficulty;
   public readonly bonusProbability = 0.0005;
-  public readonly bonusCooldown = 4
-
+  public readonly bonusCooldown = 4;
 
   constructor(game: Game, difficulty: GameDifficulty = GameDifficulty.EASY) {
     super(game);
@@ -46,11 +45,14 @@ export default class GameManager extends GameObject {
         this._playerDead = false;
       }
     }
-    this._bonusRemainingTime-=Game.deltaTime
+    this._bonusRemainingTime -= Game.deltaTime;
     //add bonus spaceship sometimes
-    if (Math.random() < this.bonusProbability&&this._bonusRemainingTime<=0) {
+    if (
+      Math.random() < this.bonusProbability &&
+      this._bonusRemainingTime <= 0
+    ) {
       this.game.addGameObject(new BonusSpaceship(this.game));
-      this._bonusRemainingTime = this.bonusCooldown
+      this._bonusRemainingTime = this.bonusCooldown;
     }
   }
 
@@ -132,8 +134,14 @@ export default class GameManager extends GameObject {
     diffScore.lastScores = score.scores;
     diffScore.bestScores = Math.max(diffScore.bestScores, score.scores);
     this.game.saveState(userKey, state);
-    const p:Promise<void> = new Promise((res,rej)=>res())
-    p.then(()=>$.cookie = `win=${isWin}`).then(()=>this.game.restart())
+    const p: Promise<void> = new Promise((res, rej) => res());
+    p.then(() =>
+      $.setCookie(
+        "win",
+        isWin.toString(),
+        new Date(new Date().getTime() + 1 * 60000)
+      )
+    ).then(() => this.game.restart());
   }
 
   /**

@@ -40,7 +40,8 @@ export default class GameManager extends GameObject {
         }
         this._bonusRemainingTime -= Game.deltaTime;
         //add bonus spaceship sometimes
-        if (Math.random() < this.bonusProbability && this._bonusRemainingTime <= 0) {
+        if (Math.random() < this.bonusProbability &&
+            this._bonusRemainingTime <= 0) {
             this.game.addGameObject(new BonusSpaceship(this.game));
             this._bonusRemainingTime = this.bonusCooldown;
         }
@@ -117,7 +118,7 @@ export default class GameManager extends GameObject {
         diffScore.bestScores = Math.max(diffScore.bestScores, score.scores);
         this.game.saveState(userKey, state);
         const p = new Promise((res, rej) => res());
-        p.then(() => $.cookie = `win=${isWin}`).then(() => this.game.restart());
+        p.then(() => $.setCookie("win", isWin.toString(), new Date(new Date().getTime() + 1 * 60000))).then(() => this.game.restart());
     }
     /**
      * can the player shoot now

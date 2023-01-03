@@ -1,4 +1,12 @@
 
+body{
+    background-color: rgb(51, 95, 170);
+    color: aliceblue;
+    
+}
+
+
+
 * {
     font-family: sans-serif;
 }
@@ -7,13 +15,18 @@ h1, h2 {
     text-align: center;
 }
 
+.header{
+    background-color: rgb(32, 65, 122);
+}
+
+
 main {
+    color: aliceblue;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 15px;
     margin: auto;
-    background-color: wheat;
 }
 
 #forms-container {

@@ -9,6 +9,10 @@ figure{
     text-align: center;
 }
 
+figure.available:hover{
+    background-color: rgb(63, 63, 145);
+}
+
 .title{
     text-align: center;
     color: antiquewhite;

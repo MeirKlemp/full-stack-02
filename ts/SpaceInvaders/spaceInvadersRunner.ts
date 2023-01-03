@@ -59,7 +59,7 @@ function setScores(game: Game,scoresData:ScoresData): void {
 
   if(isWin!=null&&(isWin == 'true')){
     scores.scores = scoresData.lastScores;
-    $.cookie = 'win=false'
+    $.setCookie('win','false')
   }
 
   game.addGameObject(scores);

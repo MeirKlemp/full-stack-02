@@ -1,16 +1,18 @@
 class _fastAccess_ui {
     constructor() { }
     get col() {
-        const elem = document.createElement('div');
-        elem.className = 'col';
+        const elem = document.createElement("div");
+        elem.className = "col";
         return elem;
     }
     row(...cols) {
-        const elem = document.createElement('div');
-        elem.className = 'row';
-        cols.forEach(c => elem.appendChild(c));
+        const elem = document.createElement("div");
+        elem.className = "row";
+        cols.forEach((c) => elem.appendChild(c));
         return elem;
     }
+}
+class _fastAccess_cookie {
 }
 export default class $ {
     /**
@@ -27,31 +29,33 @@ export default class $ {
     static get w() {
         return window;
     }
-    static getCookie(key) {
-        const cookies = document.cookie;
-        const cookiesArr = cookies.split(";");
-        const retPair = cookiesArr.find((c) => c.split("=")[0].replace(/\s/g, "") === key);
-        if (!retPair) {
-            return undefined;
-        }
-        return retPair.split("=")[1];
-    }
-    static set cookie(value) {
-        if (value.indexOf('=') != -1) {
-            const key = value.split('=')[0];
-            const val = value.split('=')[1];
-            const all = document.cookie.split(";");
-            for (let i = 0; i < all.length; i++) {
-                if (all[i].split("=")[0].trim() == key.trim()) {
-                    all[i] = `${key}=${val}`;
-                    document.cookie = all.reduce((prev, next) => `${prev}${prev == '' ? '' : ';'}${next}`, "");
-                    return;
-                }
-            }
-            const prev = all.reduce((prev, next) => `${prev}${prev == '' ? '' : ';'}${next}`, "");
-            document.cookie = `${prev}${prev ? ';' : ''}${key}=${val};`;
-        }
-    }
+    // public static getCookie(key: string): string | undefined {
+    //   const cookies = document.cookie;
+    //   const cookiesArr = cookies.split(";");
+    //   const retPair = cookiesArr.find(
+    //     (c) => c.split("=")[0].replace(/\s/g, "") === key
+    //   );
+    //   if (!retPair) {
+    //     return undefined;
+    //   }
+    //   return retPair.split("=")[1];
+    // }
+    // public static set cookie(value:string){
+    //   if(value.indexOf('=')!=-1){
+    //       const key = value.split('=')[0]
+    //       const val = value.split('=')[1]
+    //       const all = document.cookie.split(";")
+    //       for(let i=0;i<all.length;i++){
+    //           if(all[i].split("=")[0].trim()==key.trim()){
+    //               all[i] = `${key}=${val}`
+    //               document.cookie = all.reduce((prev,next)=>`${prev}${prev==''?'':';'}${next}`,"")
+    //               return
+    //           }
+    //       }
+    //       const prev = all.reduce((prev,next)=>`${prev}${prev==''?'':';'}${next}`,"")
+    //       document.cookie = `${prev}${prev?';':''}${key}=${val};`
+    //   }
+    // }
     /*
      * Returns parameter's value from url if exists. Otherwise, returns `null`.
      */
@@ -82,15 +86,40 @@ export default class $ {
         }
         return JSON.parse(dat);
     }
-    static set expireCookie(value) {
-        $.cookie = `expires=${value}`;
-    }
-    static set cookiePath(value) {
-        $.cookie = `path=${value}`;
-    }
+    // public static set expireCookie(value:Date){
+    //   $.cookie = `expires=${value}`
+    // }
+    // public static set cookiePath(value:string){
+    //   $.cookie = `path=${value}`
+    // }
     static removeCookie(name) {
-        document.cookie = `${name}=; ` +
-            `expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        document.cookie = `${name}=; ` + `expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    }
+    static setCookie(name, value, expiration, path) {
+        let cookie = `${name}=${value}`;
+        if (expiration) {
+            cookie += `; expires=${expiration}`;
+        }
+        if (path) {
+            cookie += `; path=` + path;
+        }
+        document.cookie = cookie;
+    }
+    /*
+     * Returns cookie's value if exists. Otherwise, returns `null`.
+     */
+    static getCookie(name) {
+        const cookieIndex = document.cookie.search(name + "=");
+        if (cookieIndex === -1) {
+            return null;
+        }
+        let value = document.cookie.substring(cookieIndex + name.length + 1);
+        // Removes cookies found after current cookie if exists.
+        const cookieSeparator = value.search(";");
+        if (cookieSeparator !== -1) {
+            value = value.substring(0, cookieSeparator);
+        }
+        return value;
     }
 }
 $.ui = new _fastAccess_ui();

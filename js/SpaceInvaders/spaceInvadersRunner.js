@@ -46,7 +46,7 @@ function setScores(game, scoresData) {
     scores.scores = 0;
     if (isWin != null && (isWin == 'true')) {
         scores.scores = scoresData.lastScores;
-        $.cookie = 'win=false';
+        $.setCookie('win', 'false');
     }
     game.addGameObject(scores);
     const bestScoresTransform = new Transform(Vector.zero, new Vector(300, 40));

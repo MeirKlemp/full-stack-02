@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(27, 38, 70);
+    /* background-color: rgb(27, 38, 70); */
 }
 
 .game-title{
@@ -14,12 +14,12 @@ body{
 
 .diff-button{
     font-family:"ArcadeClassic";
-    background-color: rgb(27, 38, 70);
+    /* background-color: rgb(27, 38, 70);
     color: aliceblue;
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
     font-size: xx-large;
     width: 100%;
-    opacity: 0.9;
+    opacity: 0.9; */
 }

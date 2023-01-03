@@ -3,16 +3,20 @@ import $ from "./tools/fastAccess.js";
 const imagesPath = "../images/game-covers/";
 const games = [
     {
-        gameName: "mine sweeper",
+        gameName: "Minesweeper",
         src: "mine sweeper.jfif",
         available: true,
         link: "minesweeper.html",
+        prefix: "ms",
+        bestFunc: (a, b) => 1 / (b - 1) - 1 / (a - 1),
     },
     {
         gameName: "space invaders",
         src: "space invaders.jfif",
         available: true,
         link: "spaceInvaders.html",
+        prefix: "si",
+        bestFunc: (a, b) => b - a,
     },
     {
         gameName: "Stunt-Car-Racer",
@@ -45,7 +49,7 @@ for (const game of games) {
     const col = document.createElement("div");
     col.className = "col";
     const figure = document.createElement("figure");
-    figure.className = "p-3 shadow-lg";
+    figure.className = `p-3 shadow-lg ${game.available ? "available" : ""}`;
     const img = new Image();
     img.src = `${imagesPath}${game.src}`;
     img.className = "w-100 card-img-top";
@@ -58,6 +62,28 @@ for (const game of games) {
     h2.innerHTML = game.gameName;
     const p = document.createElement("p");
     p.innerHTML = game.available ? "Play Now!" : "Not Available Yet:(";
+    if (game.available &&
+        $.loadLocale(`${$.session("currentUsername")}_${game.prefix}`)) {
+        const scores = $.loadLocale(`${$.session("currentUsername")}_${game.prefix}`);
+        const myBest = Object.keys(scores)
+            .map((s) => scores[s].bestScores)
+            .filter((s) => s != null)
+            .sort(game.bestFunc)[0];
+        const bestPlayer = $.loadLocale("users").map((u) => {
+            const uScores = $.loadLocale(`${u.username}_${game.prefix}`);
+            if (!uScores) {
+                return { user: u.username, score: 0 };
+            }
+            return {
+                user: u.username,
+                score: Object.keys(uScores)
+                    .map((s) => uScores[s].bestScores)
+                    .filter((s) => s != null)
+                    .sort(game.bestFunc)[0],
+            };
+        }).sort((a, b) => game.bestFunc(a.score, b.score))[0];
+        p.innerHTML = `Your best scores is ${myBest} and ${bestPlayer.user} is the best player with ${bestPlayer.score}!`;
+    }
     caption.appendChild(h2);
     caption.appendChild(p);
     figure.appendChild(img);
@@ -67,8 +93,8 @@ for (const game of games) {
     nextRow.appendChild(col);
 }
 container.appendChild(nextRow);
-nextRow = document.createElement('div');
-nextRow.className = 'row';
+nextRow = document.createElement("div");
+nextRow.className = "row";
 function handleGameChoose(gameUrl) {
     if (gameUrl) {
         location.replace(gameUrl);

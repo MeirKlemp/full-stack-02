@@ -2,7 +2,6 @@
  * This file handles the functionality of logging in, logging out, and
  * registering a new user.
  */
-//import { getParam, getCookie, setCookie, removeCookie } from "./common.js";
 import { NO_LOGIN_FORM, NO_REGISTER_FORM } from "./errors.js";
 import $ from "./tools/fastAccess.js";
 
@@ -85,8 +84,7 @@ function login() {
     // Updates the the number of attempts in the attempts cookie.
     const expires = new Date();
     expires.setMinutes(expires.getMinutes() + ATTEMPTS_MINUTES);
-    $.cookie = `${attemptsCookie}=${isNaN(attempts) ? 1 : attempts + 1}`;
-    $.expireCookie = expires;
+    $.setCookie(attemptsCookie, isNaN(attempts) ? 1 : attempts + 1, expires);
 
     loginError("Invalid username or password");
     return;
@@ -140,7 +138,7 @@ function register() {
     password: password,
   };
   localStorage[username] = JSON.stringify(user);
-  $.saveLocale("users",[...$.loadLocale("users"),user])
+  $.saveLocale("users", [...($.loadLocale("users") ?? []), user]);
 
   setAutoLogin(username);
 
@@ -196,15 +194,14 @@ function setAutoLogin(username: string) {
   if (keepLoggedIn) {
     const expires = new Date();
     expires.setDate(expires.getDate() + LOGIN_COOKIE_DAYS);
-    $.cookie = `${LOGIN_COOKIE_NAME}=${username}`
-    $.expireCookie = expires
+    $.setCookie(LOGIN_COOKIE_NAME, username, expires);
   }
 }
 
 /*
  * Moves to home page after successfuly logged in or registered.
  */
-function getin(username:string) {
+function getin(username: string) {
   sessionStorage.currentUsername = username;
   location.href = "./html/home.html";
 }
@@ -227,7 +224,7 @@ function logout() {
 /*
  * Displays a login error message using the login error label.
  */
-function loginError(errorMessage:string) {
+function loginError(errorMessage: string) {
   const label = document.getElementById("loginError") as HTMLLabelElement;
   label.classList.remove("hidden");
   label.innerHTML = errorMessage;
@@ -236,7 +233,7 @@ function loginError(errorMessage:string) {
 /*
  * Displays a register error message using the register error label.
  */
-function registerError(errorMessage:string) {
+function registerError(errorMessage: string) {
   const label = document.getElementById("registerError") as HTMLElement;
   label.classList.remove("hidden");
   label.innerHTML = errorMessage;

@@ -1,4 +1,6 @@
 import $ from "./tools/fastAccess.js";
+const LOGIN_COOKIE_NAME = "username";
+autoLogin();
 setTopNavbar();
 function setTopNavbar() {
     // <nav class="navbar">
@@ -23,4 +25,13 @@ function setTopNavbar() {
         nav.appendChild(homeBtn);
     }
     container.appendChild(nav);
+}
+function autoLogin() {
+    const username = $.getCookie(LOGIN_COOKIE_NAME);
+    if (username) {
+        sessionStorage.currentUsername = username;
+    }
+    else if ($.session("currenUsername")) {
+        location.replace("/index.html");
+    }
 }

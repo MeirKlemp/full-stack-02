@@ -2,7 +2,6 @@
  * This file handles the functionality of logging in, logging out, and
  * registering a new user.
  */
-//import { getParam, getCookie, setCookie, removeCookie } from "./common.js";
 import { NO_LOGIN_FORM, NO_REGISTER_FORM } from "./errors.js";
 import $ from "./tools/fastAccess.js";
 /* Name of the auto login cookie. */
@@ -73,8 +72,7 @@ function login() {
         // Updates the the number of attempts in the attempts cookie.
         const expires = new Date();
         expires.setMinutes(expires.getMinutes() + ATTEMPTS_MINUTES);
-        $.cookie = `${attemptsCookie}=${isNaN(attempts) ? 1 : attempts + 1}`;
-        $.expireCookie = expires;
+        $.setCookie(attemptsCookie, isNaN(attempts) ? 1 : attempts + 1, expires);
         loginError("Invalid username or password");
         return;
     }
@@ -86,6 +84,7 @@ function login() {
  * user. Otherwise, it shows a message to the user.
  */
 function register() {
+    var _a;
     const username = registerForm.username.value;
     const password = registerForm.password.value;
     const password2 = registerForm.password2.value;
@@ -115,7 +114,7 @@ function register() {
         password: password,
     };
     localStorage[username] = JSON.stringify(user);
-    $.saveLocale("users", [...$.loadLocale("users"), user]);
+    $.saveLocale("users", [...((_a = $.loadLocale("users")) !== null && _a !== void 0 ? _a : []), user]);
     setAutoLogin(username);
     getin(username);
 }
@@ -161,8 +160,7 @@ function setAutoLogin(username) {
     if (keepLoggedIn) {
         const expires = new Date();
         expires.setDate(expires.getDate() + LOGIN_COOKIE_DAYS);
-        $.cookie = `${LOGIN_COOKIE_NAME}=${username}`;
-        $.expireCookie = expires;
+        $.setCookie(LOGIN_COOKIE_NAME, username, expires);
     }
 }
 /*
