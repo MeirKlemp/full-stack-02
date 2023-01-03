@@ -72,7 +72,9 @@ for (const game of games) {
   nextRow.appendChild(col);
 }
 container.appendChild(nextRow);
-nextRow = new HTMLDivElement();
+nextRow = document.createElement('div');
+nextRow.className = 'row'
+
 
 function handleGameChoose(gameUrl: string | undefined) {
   if (gameUrl) {

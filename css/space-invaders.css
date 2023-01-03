@@ -7,6 +7,11 @@ body{
     color: aliceblue;
 }
 
+.game-score{
+    font-family: "ArcadeClassic";
+    color: aliceblue;
+}
+
 .diff-button{
     font-family:"ArcadeClassic";
     background-color: rgb(27, 38, 70);

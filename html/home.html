@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,24 +13,25 @@
       crossorigin="anonymous"
     />
     <link href="../css/home.css" rel="stylesheet" />
+    <link href="../css/common.css" rel="stylesheet"/>
   </head>
   <body>
-    <nav class="navbar">
+    <div id="top-nav-container">
+      <!-- <nav class="navbar">
         <a class="navbar-brand" href="../index.html?logout=true">Logout</a>
-      </nav>
+      </nav> -->
+    </div>
     <div class="container">
       <div class="row title">
         <h1>Play old School games online!</h1>
         <p>Here you can find all the old games that you want!</p>
       </div>
       <div class="row">
-        <div class="container" id="games-container">
-
-        </div>
+        <div class="container" id="games-container"></div>
       </div>
     </div>
-
-    
+    <script type="module" src="../js/commonElemnts.js"></script>
     <script type="module" src="../js/home.js"></script>
+    
   </body>
 </html>

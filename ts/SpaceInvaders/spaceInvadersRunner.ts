@@ -24,6 +24,8 @@ if(!diffParam){
   throw new Error(NO_PARAM_ERROR("diff"))
 }
 const difficulty:GameDifficulty = diffParam as GameDifficulty
+
+setHighScoresTable()
 runGame(CONTAINER_ID, initGame, new Vector(800, 720));
 
 function initGame(game: Game): void {
@@ -84,4 +86,45 @@ function setShilds(game:Game):void{
 
 function setDifficulty(diff:string){
   location.replace(`http://${location.host}${location.pathname}?diff=${diff}`)
+}
+
+
+function setHighScoresTable(){
+  if(!difficulty){
+    return;
+  }
+  const users = $.loadLocale('users') as string[]
+  let usersScores = users.map(u=>{
+    const user=(u as any).username
+    const scoresStr = $.loadLocale(`${user}_si`)
+    return {socres:ScoresState.load(scoresStr)[difficulty],userName:user}
+  });
+  usersScores = usersScores.sort((a,b)=>b.socres.bestScores-a.socres.bestScores)
+  //set up the ui
+  const container = $.id('highscores-container') as HTMLDivElement
+  //set up the title
+  const titleColumn = $.ui.col
+  titleColumn.innerHTML = "high scores"
+  container.appendChild($.ui.row($.ui.col,titleColumn,$.ui.col))
+  for(let i=0;i<usersScores.length;i++){
+    addScoreElement(i+1,usersScores[i].userName,usersScores[i].socres,container)
+  }
+}
+
+function addScoreElement(place:number,name:string,score:ScoresData,father:HTMLDivElement){
+  console.log(place,name,score.bestScores,father)
+  //set the place column
+  const placeCol = $.ui.col
+  placeCol.innerHTML = `#${place}`
+
+  //set the user name column
+  const nameCol = $.ui.col
+  nameCol.innerHTML = name
+  
+  //set the scores column
+  const scoreCol = $.ui.col
+  scoreCol.innerHTML = `${score.bestScores}`
+
+  //put all in the father
+  father.appendChild($.ui.row(placeCol,nameCol,scoreCol))
 }

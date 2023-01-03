@@ -8,3 +8,5 @@ export const PLAYER_LIVES_NOT_FOUND = "cant find the player lives";
 export const NO_PARAM_ERROR = (param) => `can't fing param ${param}`;
 export const GAME_OBJECT_NOT_FOUND = (gameObject) => `cant find ${gameObject}!`;
 export const NO_GAMES_CONTAINER = "cant find the games container!";
+export const NO_LOGIN_FORM = "cant find the lofin form";
+export const NO_REGISTER_FORM = "cant find the register form";

@@ -1,3 +1,22 @@
+class _fastAccess_ui{
+  constructor(){}
+
+  public get col():HTMLDivElement{
+    const elem = document.createElement('div')
+    elem.className = 'col'
+    return elem
+  }
+
+  public row(...cols:HTMLDivElement[]):HTMLDivElement{
+    const elem = document.createElement('div')
+    elem.className = 'row'
+    cols.forEach(c=>elem.appendChild(c))
+    return elem
+  }
+}
+
+
+
 export default class $ {
   /**
    * get elemnt by id
@@ -60,4 +79,39 @@ export default class $ {
   public static session(storage: string): any {
     return sessionStorage[storage];
   }
+
+  /**
+   * put object in the clocale storage
+   * @param key the key in the locale storage
+   * @param dat the data to set to the locale storage
+   */
+  public static saveLocale(key:string,dat:any):void{
+    const asStr = JSON.stringify(dat)
+    localStorage.setItem(key,asStr)
+  }
+
+  public static loadLocale(key:string):any{
+    const dat = localStorage.getItem(key)
+    if(dat===null){
+      return undefined
+    }
+    return JSON.parse(dat)
+  }
+
+  public static set expireCookie(value:Date){
+    $.cookie = `expires=${value}`
+  }
+
+  public static set cookiePath(value:string){
+    $.cookie = `path=${value}`
+  }
+
+  public static removeCookie(name:string){
+    document.cookie = `${name}=; ` +
+        `expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  }
+
+  public static ui:_fastAccess_ui = new _fastAccess_ui()
 }
+
+
