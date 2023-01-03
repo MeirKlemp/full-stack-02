@@ -1,15 +1,8 @@
 import {Minesweeper, Modes, Block} from './game.js';
 import $ from '../tools/fastAccess.js';
 
+// Width and height of a UI block.
 const BLOCK_SIZE_PX = 40;
-const BOMB_IMAGE_PATH = "/images/Minesweeper/bomb.png";
-const NO_BOMB_IMAGE_PATH = "/images/Minesweeper/no-bomb.png";
-
-// Status images' pathes.
-const PLAYING_IMAGE_PATH = "/images/Minesweeper/happy.png";
-const CLICKING_IMAGE_PATH = "/images/Minesweeper/surprised.png";
-const WINNER_IMAGE_PATH = "/images/Minesweeper/cool.png";
-const LOSER_IMAGE_PATH = "/images/Minesweeper/dead.png";
 
 // The blocks of the HTML board.
 const blocks = new Array<HTMLElement>();
@@ -17,16 +10,28 @@ const game = new Minesweeper(10, 10, 10);
 // Handle to the interval that updates the seconds on the screen.
 let timerInterval:number | null = null;
 
-// Game's audios.
+// Audio of clicking on a block.
 const clickAudio = new Audio("/audio/Minesweeper/click.mp3");
+// Audio of clicking on a bomb.
 const bombAudio = new Audio("/audio/Minesweeper/bomb.mp3");
+// Audio of winning the game.
 const winAudio = new Audio("/audio/Minesweeper/win.mp3");
+
+/**
+ * The status classes of the status image.
+ */
+enum Status {
+    NORMAL = "status-normal",
+    CLICKING = "status-clicking",
+    WINNER = "status-winner",
+    LOSER = "status-loser",
+}
 
 /**
  * Restarts the minesweeper game and creates the UI board content.
  */
 function loadGame():void {
-    setStatusImage(PLAYING_IMAGE_PATH);
+    setStatus(Status.NORMAL);
 
     const [rows, columns, bombs] = getGameProperties();
     game.reset(rows, columns, bombs);
@@ -82,7 +87,7 @@ function blockMouseUp(this:HTMLElement, ev:any):void {
         return;
     }
 
-    setStatusImage(PLAYING_IMAGE_PATH);
+    setStatus(Status.NORMAL);
 
     // On left click play the current block.
     let visibleBlocks = game.play(idx);
@@ -111,7 +116,7 @@ function blockMouseUp(this:HTMLElement, ev:any):void {
         }
 
         if (game.won) {
-            setStatusImage(WINNER_IMAGE_PATH);
+            setStatus(Status.WINNER);
             winAudio.play();
         } else {
             // Show all not flagged bombs and all missed flags.
@@ -124,7 +129,7 @@ function blockMouseUp(this:HTMLElement, ev:any):void {
                 }
             }
 
-            setStatusImage(LOSER_IMAGE_PATH);
+            setStatus(Status.LOSER);
             bombAudio.play();
         }
     }
@@ -143,25 +148,20 @@ function makeBlockVisible(block:HTMLElement, gameBlock:Block):void {
 
     if (gameBlock.isBomb) {
         // Show bomb image if the block has a bomb.
-        const content = document.createElement("img")
-        content.src = BOMB_IMAGE_PATH;
-        block.appendChild(content);
+        block.classList.add("block-with-bomb");
 
         // Show different style for the clicked block that had the bomb.
         if (gameBlock.mode === Modes.VISIBLE) {
-            block.classList.add("bomb-clicked");
+            block.classList.add("block-with-bomb-clicked");
         }
     } else if (gameBlock.mode === Modes.FLAGGED) {
         // Show no-bomb image if the block doesn't have a bomb but is flagged.
-        const content = document.createElement("img")
-        content.src = NO_BOMB_IMAGE_PATH;
-        block.appendChild(content);
+        block.classList.add("block-without-bomb");
     } else if (gameBlock.nearBombs !== 0) {
         // Show near bombs number if block nearby bombs.
         const content = document.createElement("p")
         content.textContent = gameBlock.nearBombs.toString();
         content.classList.add("block-num-" + gameBlock.nearBombs);
-        content.classList.add("block-num");
         block.appendChild(content);
     }
 }
@@ -196,7 +196,7 @@ function getGameProperties():[number, number, number] {
  */
 function clickingStatusMouseDown(this:HTMLElement, ev:any):void {
     if (ev.button !== 2 && !game.gameOver) {
-        setStatusImage(CLICKING_IMAGE_PATH);
+        setStatus(Status.CLICKING);
     }
 }
 
@@ -206,19 +206,21 @@ function clickingStatusMouseDown(this:HTMLElement, ev:any):void {
 function clickingStatusMouseUp(this:HTMLElement, ev:any):void {
     // Set status back to normal when done clicking.
     if (ev.button !== 2 && !game.gameOver) {
-        setStatusImage(PLAYING_IMAGE_PATH);
+        setStatus(Status.NORMAL);
     }
 }
 
 /**
- * Sets the status image according to the given image.
- * @param path path to a new image to be the new status.
+ * Sets the status image according to the given status.
  */
-function setStatusImage(path:string):void {
-    const stat = <HTMLImageElement>document.getElementById("status")!;
-    stat.src = path;
+function setStatus(stat:Status):void {
+    const statusImage = document.getElementById("status")!;
+    // Remove all other status classes.
+    for (const s of Object.values(Status)) {
+        statusImage.classList.remove(s);
+    }
+    statusImage.classList.add(stat);
 }
-
 
 window.onload = () => {
     // Loads the game whenever the user clicks on the reset button.
