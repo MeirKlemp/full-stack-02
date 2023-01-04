@@ -4,7 +4,7 @@ body{
 
 .navbar{
     background-color: rgb(18, 35, 87);
-
+    padding-left: 1rem;
 }
 
 .navbar-brand{
