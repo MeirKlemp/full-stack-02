@@ -69,12 +69,12 @@ export default class Game {
   }
 
   public destroy(id: string) {
-    this._gameObjects.find((go) => go.id == id)?.destroy();
-    this._gameObjects.applyFilter((go) => go.id != id);
+    this._gameObjects.find((go) => go.id === id)?.destroy();
+    this._gameObjects.applyFilter((go) => go.id !== id);
   }
 
   public findGameObjectById(id: string): GameObject | undefined {
-    return this._gameObjects.find((go) => go.id == id);
+    return this._gameObjects.find((go) => go.id === id);
   }
 
   public findGameObject(predicate: {
