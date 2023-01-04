@@ -121,14 +121,15 @@ function blockMouseUp(this: HTMLInputElement, ev: any): void {
     if (game.won) {
       setStatus(Status.WINNER);
       winAudio.play();
-      //calculate the new high scores
+
+      // Calculate the new high scores
       const username = $.session("currentUsername");
-      const diff: GameDifficulty = ($.param("diff") ??
-        "easy") as GameDifficulty;
+      const diff = ($.param("diff") ?? "easy") as GameDifficulty;
       const state = ScoresState.load($.loadLocale(`${username}_ms`));
-      const highScores: ScoresData = state[diff];
-      if (highScores.bestScores == 0 || game.seconds < highScores.bestScores) {
-        highScores.bestScores = game.seconds;
+      const scores:ScoresData = state[diff];
+      scores.lastScores = game.seconds;
+      if (scores.bestScores == 0 || scores.lastScore < scores.bestScores) {
+        scores.bestScores = scores.lastScore;
       }
       $.saveLocale(`${username}_ms`, state);
     } else {
