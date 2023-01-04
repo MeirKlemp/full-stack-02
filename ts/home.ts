@@ -66,12 +66,13 @@ for (const game of games) {
   h2.innerHTML = game.gameName;
   const p = document.createElement("p");
   p.innerHTML = game.available ? "Play Now!" : "Not Available Yet:(";
+  const currentUser = $.session("currentUsername");
   if (
     game.available &&
-    $.loadLocale(`${$.session("currentUsername")}_${game.prefix}`)
+    $.loadLocale(`${currentUser}_${game.prefix}`)
   ) {
     const scores: any[] = $.loadLocale(
-      `${$.session("currentUsername")}_${game.prefix}`
+      `${currentUser}_${game.prefix}`
     );
     const myBest: number = Object.keys(scores)
       .map((s) => scores[s as any].bestScores)
@@ -91,7 +92,11 @@ for (const game of games) {
       };
     }).sort((a:any,b:any)=>game.bestFunc!(a.score,b.score))[0];
 
-    p.innerHTML = `Your best scores is ${myBest} and ${bestPlayer.user} is the best player with ${bestPlayer.score}!`;
+    if (bestPlayer.user !== currentUser) {
+        p.innerHTML = `Your best scores is ${myBest} and ${bestPlayer.user} is the best player with ${bestPlayer.score}!`;
+    } else {
+        p.innerHTML = `Your best scores is ${myBest} and you are the best player!`;
+    }
   }
 
   caption.appendChild(h2);
@@ -109,6 +114,6 @@ nextRow.className = "row";
 
 function handleGameChoose(gameUrl: string | undefined) {
   if (gameUrl) {
-    location.replace(gameUrl);
+    location.href = gameUrl;
   }
 }

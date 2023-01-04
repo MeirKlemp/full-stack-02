@@ -62,9 +62,10 @@ for (const game of games) {
     h2.innerHTML = game.gameName;
     const p = document.createElement("p");
     p.innerHTML = game.available ? "Play Now!" : "Not Available Yet:(";
+    const currentUser = $.session("currentUsername");
     if (game.available &&
-        $.loadLocale(`${$.session("currentUsername")}_${game.prefix}`)) {
-        const scores = $.loadLocale(`${$.session("currentUsername")}_${game.prefix}`);
+        $.loadLocale(`${currentUser}_${game.prefix}`)) {
+        const scores = $.loadLocale(`${currentUser}_${game.prefix}`);
         const myBest = Object.keys(scores)
             .map((s) => scores[s].bestScores)
             .filter((s) => s != null)
@@ -82,7 +83,12 @@ for (const game of games) {
                     .sort(game.bestFunc)[0],
             };
         }).sort((a, b) => game.bestFunc(a.score, b.score))[0];
-        p.innerHTML = `Your best scores is ${myBest} and ${bestPlayer.user} is the best player with ${bestPlayer.score}!`;
+        if (bestPlayer.user !== currentUser) {
+            p.innerHTML = `Your best scores is ${myBest} and ${bestPlayer.user} is the best player with ${bestPlayer.score}!`;
+        }
+        else {
+            p.innerHTML = `Your best scores is ${myBest} and you are the best player!`;
+        }
     }
     caption.appendChild(h2);
     caption.appendChild(p);
@@ -97,6 +103,6 @@ nextRow = document.createElement("div");
 nextRow.className = "row";
 function handleGameChoose(gameUrl) {
     if (gameUrl) {
-        location.replace(gameUrl);
+        location.href = gameUrl;
     }
 }
