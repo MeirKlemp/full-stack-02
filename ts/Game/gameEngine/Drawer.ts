@@ -33,7 +33,7 @@ export default class Drawer {
    * @param elements All the elements to draw on the screen
    */
   public drawScreen(elements: Renderer[]) {
-    this._context.clearRect(0, 0, $.w.innerWidth, $.w.innerHeight);
+    this._context.clearRect(0, 0, this._boundary.x, this._boundary.y);
     elements.forEach((elemnt: Renderer) => elemnt.render(this._context));
   }
 
@@ -73,11 +73,4 @@ export default class Drawer {
     return image;
   }
 
-  public static drawSolid(
-    position: Vector,
-    scale: Vector,
-    context: CanvasRenderingContext2D
-  ): void {
-    //TODO :: implement that method
-  }
 }

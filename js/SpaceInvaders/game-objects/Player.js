@@ -51,6 +51,9 @@ export default class Player extends GameObject {
         }
         this.transform.transfer(movement);
     }
+    /**
+     * scan all the bullets in the game and shoot if the player pressed space and there is no bullet that the player shooted
+     */
     shooter() {
         if (Game.getInput("Space")) {
             const isBullet = this.game.findGameObjectsByType(Bullet).filter((b) => !b.enemyBullet)

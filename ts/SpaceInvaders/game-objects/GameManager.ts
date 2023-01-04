@@ -22,7 +22,6 @@ export default class GameManager extends GameObject {
   private _enemyMovingDown: boolean = false;
   private _positionSwapped: boolean = false;
   public readonly downStep: number = 10;
-  private _canPlayerShoot: boolean = true;
   private _respawnTimer: number = 0;
   private _playerDead: boolean = false;
   private _bonusRemainingTime: number = 0;
@@ -142,19 +141,5 @@ export default class GameManager extends GameObject {
         new Date(new Date().getTime() + 1 * 60000)
       )
     ).then(() => this.game.restart());
-  }
-
-  /**
-   * can the player shoot now
-   */
-  public get canPlayerShoot(): boolean {
-    return this._canPlayerShoot;
-  }
-
-  /**
-   * can the player shoot now
-   */
-  public set canPlayerShoot(value: boolean) {
-    this._canPlayerShoot = value;
   }
 }

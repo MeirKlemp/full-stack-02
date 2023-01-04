@@ -21,7 +21,6 @@ export default class Bullet extends GameObject {
         if (!gameManager) {
             throw new Error(GAME_MANAGER_NOT_FOUND);
         }
-        gameManager.canPlayerShoot = false;
         //add teh voice to the bullet
         if (!this._enemySource) {
             const player = new AudioPlayer();
@@ -36,7 +35,7 @@ export default class Bullet extends GameObject {
         this.addComponent(collider);
     }
     earlyUpdate() {
-        if (this.transform.position.y < 0 || this.transform.position.y > this.game.boundary.y) {
+        if (this.transform.position.y <= 0 || this.transform.position.y > this.game.boundary.y) {
             const gameManager = this.game.findGameObjectByType(GameManager);
             if (!gameManager) {
                 throw new Error(GAME_MANAGER_NOT_FOUND);
@@ -54,16 +53,6 @@ export default class Bullet extends GameObject {
     }
     set speed(value) {
         this._speed = value;
-    }
-    destroy() {
-        const manager = this.game.findGameObjectByType(GameManager);
-        if (!manager) {
-            throw new Error(GAME_MANAGER_NOT_FOUND);
-        }
-        if (!this._enemySource) {
-            manager.canPlayerShoot = true;
-        }
-        super.destroy();
     }
     /**
      * is the bullet is bullet of teh enemy

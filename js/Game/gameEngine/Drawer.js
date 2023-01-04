@@ -26,7 +26,7 @@ export default class Drawer {
      * @param elements All the elements to draw on the screen
      */
     drawScreen(elements) {
-        this._context.clearRect(0, 0, $.w.innerWidth, $.w.innerHeight);
+        this._context.clearRect(0, 0, this._boundary.x, this._boundary.y);
         elements.forEach((elemnt) => elemnt.render(this._context));
     }
     /**
@@ -56,8 +56,5 @@ export default class Drawer {
     static drawImage(image, position, scale, context) {
         context.drawImage(image, position.x, position.y, scale.x, scale.y);
         return image;
-    }
-    static drawSolid(position, scale, context) {
-        //TODO :: implement that method
     }
 }

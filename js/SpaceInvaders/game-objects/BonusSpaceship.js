@@ -9,6 +9,10 @@ import Bullet from "./Bullet.js";
 import { GAME_SCORES_NOT_FOUND } from "../../errors.js";
 import GameScores from "./GameScores.js";
 export default class BonusSpaceship extends GameObject {
+    /**
+     * generate new bonus space ship that moving from left to right
+     * @param game the game
+     */
     constructor(game) {
         super(game);
         this._speed = 100;

@@ -20,7 +20,6 @@ export default class GameManager extends GameObject {
         this._enemyMovingDown = false;
         this._positionSwapped = false;
         this.downStep = 10;
-        this._canPlayerShoot = true;
         this._respawnTimer = 0;
         this._playerDead = false;
         this._bonusRemainingTime = 0;
@@ -119,17 +118,5 @@ export default class GameManager extends GameObject {
         this.game.saveState(userKey, state);
         const p = new Promise((res, rej) => res());
         p.then(() => $.setCookie("win", isWin.toString(), new Date(new Date().getTime() + 1 * 60000))).then(() => this.game.restart());
-    }
-    /**
-     * can the player shoot now
-     */
-    get canPlayerShoot() {
-        return this._canPlayerShoot;
-    }
-    /**
-     * can the player shoot now
-     */
-    set canPlayerShoot(value) {
-        this._canPlayerShoot = value;
     }
 }

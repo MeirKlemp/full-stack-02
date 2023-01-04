@@ -15,6 +15,10 @@ export default class BonusSpaceship extends GameObject{
     private readonly _initialPosition:Vector = new Vector(0,120)
     public readonly scores = 100
 
+    /**
+     * generate new bonus space ship that moving from left to right
+     * @param game the game
+     */
     constructor(game:Game){
         super(game)
         //set the spaceship audio
