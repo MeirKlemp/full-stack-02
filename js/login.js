@@ -77,6 +77,7 @@ function login() {
         return;
     }
     setAutoLogin(username);
+    $.removeCookie(attemptsCookie);
     getin(username);
 }
 /*

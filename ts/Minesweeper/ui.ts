@@ -239,19 +239,6 @@ function setStatus(stat: Status): void {
   statusImage.classList.add(stat);
 }
 
-window.onload = () => {
-  // Loads the game whenever the user clicks on the reset button.
-  const resetButton = document.getElementById("reset")!;
-  resetButton.addEventListener("click", loadGame);
-
-  // Set status clicking events.
-  const board = document.getElementById("board")!;
-  board.addEventListener("mousedown", clickingStatusMouseDown);
-  document.body.addEventListener("mouseup", clickingStatusMouseUp);
-
-  loadGame();
-};
-
 function setHighScoresTable() {
   const difficulty = ($.param("diff") ?? "easy") as GameDifficulty;
   const users = $.loadLocale("users") as string[];
@@ -286,7 +273,6 @@ function addScoreElement(
   score: ScoresData,
   father: HTMLDivElement
 ) {
-  console.log(place, name, score.bestScores, father);
   //set the place column
   const placeCol = $.ui.col;
   placeCol.innerHTML = `#${place}`;
@@ -302,3 +288,16 @@ function addScoreElement(
   //put all in the father
   father.appendChild($.ui.row(placeCol, nameCol, scoreCol));
 }
+
+window.onload = () => {
+  // Loads the game whenever the user clicks on the reset button.
+  const resetButton = document.getElementById("reset")!;
+  resetButton.addEventListener("click", loadGame);
+
+  // Set status clicking events.
+  const board = document.getElementById("board")!;
+  board.addEventListener("mousedown", clickingStatusMouseDown);
+  document.body.addEventListener("mouseup", clickingStatusMouseUp);
+
+  loadGame();
+};

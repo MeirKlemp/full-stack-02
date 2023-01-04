@@ -31,7 +31,7 @@ function autoLogin() {
     if (username) {
         sessionStorage.currentUsername = username;
     }
-    else if ($.session("currenUsername")) {
+    else if (!$.session("currentUsername")) {
         location.replace("/index.html");
     }
 }

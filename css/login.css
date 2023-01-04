@@ -47,8 +47,11 @@ input {
 }
 
 .error {
-    color: red;
+    box-sizing: border-box;
     overflow-wrap: break-word;
+    background-color: #d11d1d;
+    border-radius: 3px;
+    padding: 3px;
 }
 
 .hidden {

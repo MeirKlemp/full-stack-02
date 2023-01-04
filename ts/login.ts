@@ -92,6 +92,7 @@ function login() {
 
   setAutoLogin(username);
 
+  $.removeCookie(attemptsCookie);
   getin(username);
 }
 
