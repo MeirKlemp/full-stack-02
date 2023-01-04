@@ -30,6 +30,7 @@ body {
 
 #reset {
   cursor: pointer;
+  border: outset 1.6px rgb(227, 227, 227);
 }
 
 .game-score {
