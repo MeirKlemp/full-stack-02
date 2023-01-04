@@ -31,19 +31,18 @@ function loadGame() {
     setStatus(Status.NORMAL);
     const [rows, columns, bombs] = getGameProperties();
     game.reset(rows, columns, bombs);
-    // Resets the board's content and size.
-    const styleWidth = columns * BLOCK_SIZE_PX + "px";
+    // Update game space's content and size.
+    const gameSpace = document.getElementById("game-space");
     const board = document.getElementById("board");
-    board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-    $.id("game-space").style.width = styleWidth;
-    board.style.height = `${rows * BLOCK_SIZE_PX}px`;
-    board.innerHTML = "";
     const dashboard = document.getElementById("dashboard");
-    dashboard.style.maxWidth = styleWidth;
+    gameSpace.style.maxWidth = columns * BLOCK_SIZE_PX + "px";
+    board.style.height = rows * BLOCK_SIZE_PX + "px";
+    board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+    board.innerHTML = "";
     // Creates the board's grid.
     blocks.length = game.board.length;
     for (let i = 0; i < blocks.length; ++i) {
-        const block = document.createElement("div");
+        const block = document.createElement("button");
         block.classList.add("block");
         block.classList.add("block-hidden");
         block.addEventListener("mouseup", blockMouseUp);
@@ -89,10 +88,10 @@ function blockMouseUp(ev) {
         makeBlockVisible(blocks[i], game.board[i]);
     }
     if (game.gameOver) {
-        // Make board unclickable.
+        // Make the board unclickable.
         for (const block of blocks) {
             block.removeEventListener("mouseup", blockMouseUp);
-            block.style.cursor = "auto";
+            block.disabled = true;
         }
         // Stop timer.
         updateTimer();
@@ -114,6 +113,7 @@ function blockMouseUp(ev) {
             $.saveLocale(`${username}_ms`, state);
         }
         else {
+            // If got here, the player lost.
             // Show all not flagged bombs and all missed flags.
             for (let i = 0; i < blocks.length; ++i) {
                 if (i === idx)
@@ -135,6 +135,7 @@ function blockMouseUp(ev) {
  * @param gameBlock the game's block that correspondes to the HTML block.
  */
 function makeBlockVisible(block, gameBlock) {
+    block.disabled = true;
     block.classList.add("block-visible");
     block.classList.remove("block-hidden");
     block.classList.remove("block-flagged");

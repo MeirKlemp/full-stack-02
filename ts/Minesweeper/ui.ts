@@ -6,7 +6,7 @@ import ScoresState, { GameDifficulty, ScoresData } from "./ScoresState.js";
 const BLOCK_SIZE_PX = 40;
 
 // The blocks of the HTML board.
-const blocks = new Array<HTMLElement>();
+const blocks = new Array<HTMLInputElement>();
 const game = new Minesweeper(10, 10, 10);
 // Handle to the interval that updates the seconds on the screen.
 let timerInterval: number | null = null;
@@ -37,21 +37,21 @@ function loadGame(): void {
   const [rows, columns, bombs] = getGameProperties();
   game.reset(rows, columns, bombs);
 
-  // Resets the board's content and size.
-  const styleWidth = columns * BLOCK_SIZE_PX + "px";
+  // Update game space's content and size.
+  const gameSpace = document.getElementById("game-space")!;
   const board = document.getElementById("board")!;
+  const dashboard = document.getElementById("dashboard")!;
+
+  gameSpace.style.maxWidth = columns * BLOCK_SIZE_PX + "px";
+  board.style.height = rows * BLOCK_SIZE_PX + "px";
   board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-  ($.id("game-space") as any).style.width = styleWidth;
-  board.style.height = `${rows * BLOCK_SIZE_PX}px`;
   board.innerHTML = "";
 
-  const dashboard = document.getElementById("dashboard")!;
-  dashboard.style.maxWidth = styleWidth;
 
   // Creates the board's grid.
   blocks.length = game.board.length;
   for (let i = 0; i < blocks.length; ++i) {
-    const block = document.createElement("div");
+    const block = document.createElement("button") as HTMLInputElement;
     block.classList.add("block");
     block.classList.add("block-hidden");
     block.addEventListener("mouseup", blockMouseUp);
@@ -75,7 +75,7 @@ function loadGame(): void {
   setHighScoresTable()
 }
 
-function blockMouseUp(this: HTMLElement, ev: any): void {
+function blockMouseUp(this: HTMLInputElement, ev: any): void {
   const idx = blocks.indexOf(this);
 
   if (ev.button === 2) {
@@ -105,10 +105,10 @@ function blockMouseUp(this: HTMLElement, ev: any): void {
   }
 
   if (game.gameOver) {
-    // Make board unclickable.
+    // Make the board unclickable.
     for (const block of blocks) {
       block.removeEventListener("mouseup", blockMouseUp);
-      block.style.cursor = "auto";
+      block.disabled = true;
     }
 
     // Stop timer.
@@ -132,6 +132,7 @@ function blockMouseUp(this: HTMLElement, ev: any): void {
       }
       $.saveLocale(`${username}_ms`, state);
     } else {
+      // If got here, the player lost.
       // Show all not flagged bombs and all missed flags.
       for (let i = 0; i < blocks.length; ++i) {
         if (i === idx) continue;
@@ -155,7 +156,8 @@ function blockMouseUp(this: HTMLElement, ev: any): void {
  * @param block     the HTML block to be visible.
  * @param gameBlock the game's block that correspondes to the HTML block.
  */
-function makeBlockVisible(block: HTMLElement, gameBlock: Block): void {
+function makeBlockVisible(block: HTMLInputElement, gameBlock: Block): void {
+  block.disabled = true;
   block.classList.add("block-visible");
   block.classList.remove("block-hidden");
   block.classList.remove("block-flagged");
