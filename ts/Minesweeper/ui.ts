@@ -47,7 +47,6 @@ function loadGame(): void {
   board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
   board.innerHTML = "";
 
-
   // Creates the board's grid.
   blocks.length = game.board.length;
   for (let i = 0; i < blocks.length; ++i) {
@@ -128,8 +127,8 @@ function blockMouseUp(this: HTMLInputElement, ev: any): void {
       const state = ScoresState.load($.loadLocale(`${username}_ms`));
       const scores:ScoresData = state[diff];
       scores.lastScores = game.seconds;
-      if (scores.bestScores == 0 || scores.lastScore < scores.bestScores) {
-        scores.bestScores = scores.lastScore;
+      if (scores.bestScores == 0 || scores.lastScores < scores.bestScores) {
+        scores.bestScores = scores.lastScores;
       }
       $.saveLocale(`${username}_ms`, state);
     } else {

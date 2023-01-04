@@ -102,13 +102,14 @@ function blockMouseUp(ev) {
         if (game.won) {
             setStatus(Status.WINNER);
             winAudio.play();
-            //calculate the new high scores
+            // Calculate the new high scores
             const username = $.session("currentUsername");
             const diff = ((_a = $.param("diff")) !== null && _a !== void 0 ? _a : "easy");
             const state = ScoresState.load($.loadLocale(`${username}_ms`));
-            const highScores = state[diff];
-            if (highScores.bestScores == 0 || game.seconds < highScores.bestScores) {
-                highScores.bestScores = game.seconds;
+            const scores = state[diff];
+            scores.lastScores = game.seconds;
+            if (scores.bestScores == 0 || scores.lastScores < scores.bestScores) {
+                scores.bestScores = scores.lastScores;
             }
             $.saveLocale(`${username}_ms`, state);
         }
