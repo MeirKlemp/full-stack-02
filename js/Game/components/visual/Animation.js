@@ -21,6 +21,7 @@ export default class Animation extends Displayable {
          * the current time of the animation
          */
         this._currentTime = 0;
+        this._onAnimationChange = [];
         this._name = name;
         this._sprites = [];
         for (let i = 0; i < imagesPaths.length; i++) {
@@ -34,6 +35,18 @@ export default class Animation extends Displayable {
             throw new Error(GAME_OBJECT_ERROR);
         }
         return this._gameObject.transform.position;
+    }
+    /**
+     * the time betwee two frames in seconds
+     */
+    get timeBetweenFrames() {
+        return this._timeBetweenFrames;
+    }
+    /**
+     * the time betwee two frames in seconds
+     */
+    set timeBetweenFrames(seconds) {
+        this._timeBetweenFrames = seconds;
     }
     get scale() {
         if (this._gameObject == null) {
@@ -73,7 +86,22 @@ export default class Animation extends Displayable {
         super.register(gameObject);
         this._sprites.forEach(s => s.register(gameObject));
     }
+    /**
+     * update each frame iteration
+     */
     componentUpdate() {
+        const prevSprite = this.getCurrenSprite();
         this._currentTime += Game.deltaTime;
+        //invoke the on animation change events if the animation has changed
+        if (this.currentSprite.id != prevSprite.id) {
+            this._onAnimationChange.forEach(e => e(this));
+        }
+    }
+    /**
+     * Register event to invoke when the animation changed
+     * @param e The function to run when the animation changed
+     */
+    registerAnimationChangeEvent(e) {
+        this._onAnimationChange.push(e);
     }
 }

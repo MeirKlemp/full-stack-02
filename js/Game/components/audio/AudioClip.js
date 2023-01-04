@@ -11,9 +11,11 @@ export default class AudioClip extends Component {
         return this._name;
     }
     play() {
+        this._clip.loop = this._isLoop;
         this._clip.play();
     }
     pause() {
+        this._clip.loop;
         this._clip.pause();
     }
     stop() {

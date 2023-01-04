@@ -8,6 +8,8 @@ import Game from "../../gameEngine/Game.js";
 
 
 
+type animationChangeEvent = (self:Animation) =>void
+
 /**
  * Presents animation for animating GameObjects
  */
@@ -33,6 +35,8 @@ export default class Animation extends Displayable implements ImageVisulizer {
    */
   private _currentTime:number = 0
 
+  private _onAnimationChange:animationChangeEvent[] = []
+
   /**
    * Create new anumation
    * @param sprites The sprites for the anumation
@@ -55,6 +59,20 @@ export default class Animation extends Displayable implements ImageVisulizer {
       throw new Error(GAME_OBJECT_ERROR);
     }
     return this._gameObject.transform.position;
+  }
+
+  /**
+   * the time betwee two frames in seconds
+   */
+  public get timeBetweenFrames():number{
+    return this._timeBetweenFrames;
+  }
+
+  /**
+   * the time betwee two frames in seconds
+   */
+  public set timeBetweenFrames(seconds:number){
+    this._timeBetweenFrames = seconds
   }
 
   public get scale(): Vector {
@@ -102,7 +120,24 @@ export default class Animation extends Displayable implements ImageVisulizer {
     this._sprites.forEach(s=>s.register(gameObject))
   }
 
+  /**
+   * update each frame iteration
+   */
   public componentUpdate():void{
+    const prevSprite = this.getCurrenSprite()
     this._currentTime+=Game.deltaTime
+    //invoke the on animation change events if the animation has changed
+    if(this.currentSprite.id!=prevSprite.id){
+      this._onAnimationChange.forEach(e=>e(this))
+    }
+  }
+
+
+  /**
+   * Register event to invoke when the animation changed
+   * @param e The function to run when the animation changed
+   */
+  public registerAnimationChangeEvent(e:animationChangeEvent){
+    this._onAnimationChange.push(e)
   }
 }

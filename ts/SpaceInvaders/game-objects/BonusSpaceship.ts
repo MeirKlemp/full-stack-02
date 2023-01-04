@@ -19,7 +19,7 @@ export default class BonusSpaceship extends GameObject{
         super(game)
         //set the spaceship audio
         const audioPlayer = new AudioPlayer()
-        audioPlayer.addClip("bonus","../../audio/space-invaders/bonus.wav")
+        audioPlayer.addClip("bonus","../../audio/space-invaders/ufo_highpitch.wav")
         audioPlayer.loop = true
         audioPlayer.playClip("bonus")
         this.addComponent(audioPlayer)

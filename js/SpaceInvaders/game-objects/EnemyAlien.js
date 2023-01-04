@@ -4,6 +4,7 @@ import ImageRenderer from "../../Game/components/visual/renderers/ImageRenderer.
 import Game from "../../Game/gameEngine/Game.js";
 import Vector from "../../Game/util/Vector.js";
 import GameManager from "./GameManager.js";
+import Animation from "../../Game/components/visual/Animation.js";
 import BoxCollider from "../../Game/components/colliders/BoxCollider.js";
 import Bullet from "./Bullet.js";
 import GameScores from "./GameScores.js";
@@ -24,11 +25,12 @@ export default class EnemyAlien extends GameObject {
         this._shootProbability = 0.00001;
         this._baseEnemiesModifier = 57;
         this._gameOverHeight = 100;
+        this._initialTimeBetweenFrames = 1;
         this._difficultyDiff = {
             easy: 0.5,
             medium: 1,
             hard: 2,
-            impossible: 100
+            impossible: 100,
         };
         const gm = game.findGameObjectByType(GameManager);
         if (gm == null) {
@@ -42,6 +44,7 @@ export default class EnemyAlien extends GameObject {
         const collider = new BoxCollider(Vector.zero, this.transform.scale);
         collider.registerTriggerCollisionEvent(onTriggerEnter);
         this.addComponent(collider);
+        animation.registerAnimationChangeEvent(onAnimationChanged);
     }
     /**
      * the unit speed
@@ -52,8 +55,18 @@ export default class EnemyAlien extends GameObject {
             throw new Error(GAME_OBJECT_NOT_FOUND(EnemyGroup));
         }
         return (this._initialSpeed +
-            this._accelleration * (this._baseEnemiesModifier - group.reaminingAliens)
-                * this._difficultyDiff[this._gameManager.difficulty]);
+            this._accelleration *
+                (this._baseEnemiesModifier - group.reaminingAliens) *
+                this._difficultyDiff[this._gameManager.difficulty]);
+    }
+    updateTimeBetweenAnimationFrames() {
+        const group = this.game.findGameObjectByType(EnemyGroup);
+        if (!group) {
+            throw new Error(GAME_OBJECT_NOT_FOUND(EnemyGroup));
+        }
+        console.log(1 - (this.shootRandomness * 499), this.shootRandomness, this.shootRandomness * 499);
+        this.getComponent(Animation).timeBetweenFrames =
+            Math.max(1 - (this.shootRandomness * 499), 0.0000001) / 1.5;
     }
     /**
      * the unit speed
@@ -109,6 +122,7 @@ export default class EnemyAlien extends GameObject {
             }
             lives.decreaseLive();
         }
+        this.updateTimeBetweenAnimationFrames();
     }
     get shootRandomness() {
         const group = this.game.findGameObjectByType(EnemyGroup);
@@ -116,7 +130,8 @@ export default class EnemyAlien extends GameObject {
             throw new Error(GAME_OBJECT_NOT_FOUND(EnemyGroup));
         }
         return ((this._baseEnemiesModifier - group.reaminingAliens) *
-            this._shootProbability * this._difficultyDiff[this._gameManager.difficulty]);
+            this._shootProbability *
+            this._difficultyDiff[this._gameManager.difficulty]);
     }
 }
 function onTriggerEnter(self, other) {
@@ -140,4 +155,9 @@ function onTriggerEnter(self, other) {
             other.gameObject.game.destroy(other.gameObject.id);
         }
     }
+}
+function onAnimationChanged(self) {
+    const enemies = self.gameObject.game
+        .findGameObjectByType(EnemyGroup)
+        .triggerAnimationChange();
 }

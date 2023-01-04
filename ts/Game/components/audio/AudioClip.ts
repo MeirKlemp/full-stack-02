@@ -17,10 +17,12 @@ export default class AudioClip extends Component {
   }
 
   public play(): void {
+    this._clip.loop = this._isLoop;
     this._clip.play();
   }
 
   public pause(): void {
+    this._clip.loop
     this._clip.pause();
   }
 
